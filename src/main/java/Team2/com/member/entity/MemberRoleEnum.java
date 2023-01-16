@@ -1,4 +1,4 @@
-package Team2.com.security;
+package Team2.com.member.entity;
 
 public enum MemberRoleEnum {
     CUSTOMER(Authority.CUSTOMER),  // 사용자 권한
@@ -20,4 +20,5 @@ public enum MemberRoleEnum {
         public static final String SELLER = "ROLE_SELLER";
         public static final String ADMIN = "ROLE_ADMIN";
     }
+
 }

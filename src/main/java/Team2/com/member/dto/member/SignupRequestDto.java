@@ -1,10 +1,6 @@
-package Team2.com.security.dto;
+package Team2.com.member.dto.member;
 
 import lombok.Getter;
-import lombok.Setter;
-
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @Getter
 public class SignupRequestDto {

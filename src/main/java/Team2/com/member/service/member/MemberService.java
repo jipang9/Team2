@@ -1,10 +1,10 @@
-package Team2.com.security.service;
+package Team2.com.member.service.member;
 
 import Team2.com.member.entity.Member;
 import Team2.com.member.repository.MemberRepository;
-import Team2.com.security.MemberRoleEnum;
-import Team2.com.security.dto.LoginRequestDto;
-import Team2.com.security.dto.SignupRequestDto;
+import Team2.com.member.entity.MemberRoleEnum;
+import Team2.com.member.dto.member.LoginRequestDto;
+import Team2.com.member.dto.member.SignupRequestDto;
 import Team2.com.security.exception.CustomException;
 import Team2.com.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class MemberService {
 //회원가입 구현
 
     //의존성 주입(DI)
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;  //의존성 주입(DI) --> jwtUtil.class 에서 @Component 로 빈을 등록했기때문에 가능
     private final PasswordEncoder passwordEncoder;
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
@@ -43,7 +43,7 @@ public class MemberService {
 
         // 회원 중복 확인
         //userRepository 에서 username 으로 실제 유저가 있는지 없는지 확인
-        Optional<Member> found = userRepository.findByUsername(username);  //userRepository 에 구현하기
+        Optional<Member> found = memberRepository.findByUsername(username);  //userRepository 에 구현하기
         //중복된 유저가 존재한다면,
         if (found.isPresent()) {
             //해당 메시지 보내기
@@ -65,7 +65,7 @@ public class MemberService {
 
         //가져온 username, password, role(UserRoleEnum)를 넣어서 저장(save)
         Member user = new Member(username, password, role);
-        userRepository.save(user);
+        memberRepository.save(user);
     }
 
     //로그인 구현
@@ -77,7 +77,7 @@ public class MemberService {
 
         // 사용자 확인
         //username 을 통해 확인해서, 있다면 User 객체에 담긴다
-        Member member = userRepository.findByUsername(username).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 //없다면(매개변수가 의도치 않는 상황 유발시), 해당 메시지 보내기
                 () -> new CustomException(NOT_FOUND_USER)
         );
@@ -95,4 +95,6 @@ public class MemberService {
         //jwtUtil 를 사용하기 위해, 위에서 의존성 주입을 해줘야 함
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getUsername(), member.getRole()));
     }
+
+
 }
