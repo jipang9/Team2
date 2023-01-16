@@ -1,6 +1,7 @@
 package Team2.com.item.entity;
 
 import Team2.com.member.entity.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Item {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Member member;      //회원 정보
 
     @Column(name="item_price")
