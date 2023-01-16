@@ -1,15 +1,15 @@
 package Team2.com.security.controller;
 
+import Team2.com.security.dto.LoginRequestDto;
 import Team2.com.security.dto.MsgResponseDto;
 import Team2.com.security.dto.SignupRequestDto;
-import Team2.com.security.service.UserService;
+import Team2.com.security.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 public class MemberController {
 
     //HTTP request 를 받아서, Service 쪽으로 넘겨주고, 가져온 데이터들을 requestDto 파라미터로 보냄
-    private final UserService userService;
+    private final MemberService memberService;
 
     //회원가입 구현
     @PostMapping("/signup")
@@ -33,7 +33,7 @@ public class MemberController {
     //@Valid: Controller 에서 유효성 검사를 할 곳에 붙임
     public ResponseEntity<MsgResponseDto> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {   //(@RequestBody @Valid SignupRequestDto signupRequestDto)?
         //signupRequestDto 에 데이터를 담아서, userService 로 응답을 보냄
-        userService.signup(signupRequestDto);
+        memberService.signup(signupRequestDto);
         //MsgResponseDto 에서 선언한 타입(여기서는 String message, int statusCode)으로 반환하는데,
         //ResponseEntity.ok(): 상태코드를 반환
         return ResponseEntity.ok(new MsgResponseDto("회원가입 완료", HttpStatus.OK.value()));
@@ -47,9 +47,9 @@ public class MemberController {
     //HttpServletRequest request 객체: 누가 로그인 했는지 알기위한 토큰을 담고 있음
     public ResponseEntity<MsgResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         //loginRequestDto, response 에 데이터를 담아서, userService 로 응답을 보냄
-        userService.login(loginRequestDto, response);
+        memberService.login(loginRequestDto, response);
         //MsgResponseDto 에서 선언한 타입(여기서는 String message, int statusCode)으로 반환하는데,
         //ResponseEntity.ok(): 상태코드를 반환
-        return ResponseEntity.ok(new MsgResponseDto("로그인 완료",HttpStatus.OK.value()));
+        return ResponseEntity.ok(new MsgResponseDto("로그인 완료", HttpStatus.OK.value()));
     }
 }

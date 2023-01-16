@@ -5,6 +5,7 @@ import Team2.com.item.dto.ItemDto;
 import Team2.com.item.service.ItemService;
 import Team2.com.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,10 @@ public class ItemController {
     //모든 제품 조회
     @GetMapping("/products")
     //@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getItemAllList(){
-        List<ItemDto.ResponseItemDto> itemAllList = itemService.getItemAllList();
+    public ResponseEntity getItemAllList(@RequestParam("page") Integer page){
+        PageRequest pageRequest = PageRequest.of(page,10);
+
+        List<ItemDto.ResponseItemDto> itemAllList = itemService.getItemAllList(pageRequest);
         if(itemAllList.isEmpty()){
             return new ResponseEntity("등록된 상품이 없습니다.", HttpStatus.OK);
         }
@@ -33,8 +36,13 @@ public class ItemController {
     //하나의 제품 조회
     @GetMapping("/product/{id}")
     //@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getItem(@PathVariable Long itemId){
+    public ResponseEntity getItem(@PathVariable("id") Long itemId){
+
         ItemDto.ResponseItemDto item = itemService.getItem(itemId);
+
+        if(item==null){
+            return new ResponseEntity("제품이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity(item, HttpStatus.OK);
     }
 
@@ -50,7 +58,7 @@ public class ItemController {
     //제품 수정
     @PutMapping("/product/{id}")
     //@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity modifyItem(@PathVariable Long itemId, @RequestBody ItemDto.RequestItemDto requestItemDto){
+    public ResponseEntity modifyItem(@PathVariable("id") Long itemId, @RequestBody ItemDto.RequestItemDto requestItemDto){
         itemService.modifyItem(itemId, requestItemDto, member);
         return new ResponseEntity("제품수정이 완료되었습니다.", HttpStatus.OK);
     }
@@ -58,7 +66,7 @@ public class ItemController {
 
     //제품 삭제
     @DeleteMapping("/product/{id}")
-    public ResponseEntity deleteItem(@PathVariable Long itemId){
+    public ResponseEntity deleteItem(@PathVariable("id") Long itemId){
         itemService.deleteItem(itemId, member);
         return new ResponseEntity("제품삭제가 완료되었습니다.", HttpStatus.OK);
     }

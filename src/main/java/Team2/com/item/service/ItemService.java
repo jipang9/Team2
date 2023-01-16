@@ -4,7 +4,9 @@ import Team2.com.item.dto.ItemDto;
 import Team2.com.item.entity.Item;
 import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
+import Team2.com.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
@@ -17,18 +19,18 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
 
-    //private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     //전체 상품 조회
     @Transactional(readOnly = true)
-    public List<ItemDto.ResponseItemDto> getItemAllList() {
+    public List<ItemDto.ResponseItemDto> getItemAllList(PageRequest pageRequest) {
 
-        List<Item> items = itemRepository.findAllByOrderByIdDesc();
+        List<Item> items = itemRepository.findAllByOrderByIdDesc(pageRequest);
 
         List<ItemDto.ResponseItemDto> itemDtos = new ArrayList<>();
-        for(int i=0; i<itemDtos.size(); i++){
-            itemDtos.add(new ItemDto.ResponseItemDto(itemDtos.get(i).getItemName(), itemDtos.get(i).getContent(),
-                                itemDtos.get(i).getCount(), itemDtos.get(i).getPrice(), itemDtos.get(i).getSellerName()));
+        for(int i=0; i<items.size(); i++){
+            itemDtos.add(new ItemDto.ResponseItemDto(items.get(i).getName(), items.get(i).getContent(),
+                                                            items.get(i).getCount(), items.get(i).getPrice(), items.get(i).getMember().getUsername()));
         }
         return itemDtos;
     }
@@ -37,7 +39,7 @@ public class ItemService {
     @Transactional(readOnly = true)
     public ItemDto.ResponseItemDto getItem(Long itemId) {
 
-        Item item = itemRepository.findById(itemId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        Item item = itemRepository.findById(itemId).orElseThrow(()-> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
         return new ItemDto.ResponseItemDto(item.getName(), item.getContent(), item.getPrice(), item.getCount(), item.getMember().getUsername());
     }
@@ -45,6 +47,8 @@ public class ItemService {
     @Transactional
     public ItemDto.ResponseItemDto addItem(ItemDto.RequestItemDto requestItemDto, Member member) {
 
+        //0. 임의로 member 1명 데이터 삽입함.
+        memberRepository.saveAndFlush(member);
         //1. 로그인한 판매자 정보 가져오기
 
         //2. 상품 등록
