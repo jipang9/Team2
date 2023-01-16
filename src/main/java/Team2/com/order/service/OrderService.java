@@ -28,30 +28,22 @@ public class OrderService {
     private final ItemRepository itemRepository;
 
     public void createOrder(Member seller, Member customer, Item item1, Item item2, Item item3) {
-        System.out.println("seller.getId() = " + seller.getId());
-        System.out.println("customer.getId() = " + customer.getId());
-        // Member seller = new Member("판매자");
-        // Member customer = new Member("구매자");
-        memberRepository.save(seller);
-        memberRepository.save(customer);
-        //
-        // Item item1 = new Item("칫솔", "이닦는 도구", seller, 3000, 100);
-        // Item item2 = new Item("연필", "글쓰는 도구", seller,1000, 100);
-        // Item item3 = new Item("신발", "신는거", seller, 60000, 100);
-        itemRepository.save(item1);
-        itemRepository.save(item2);
-        itemRepository.save(item3);
+        memberRepository.saveAndFlush(seller);
+        memberRepository.saveAndFlush(customer);
+
+        itemRepository.saveAndFlush(item1);
+        itemRepository.saveAndFlush(item2);
+        itemRepository.saveAndFlush(item3);
 
         OrderItems orderItems1 = new OrderItems(item1, 3);
         OrderItems orderItems2 = new OrderItems(item2, 2);
         OrderItems orderItems3 = new OrderItems(item3, 4);
-        orderItemsRepository.save(orderItems1);
-        orderItemsRepository.save(orderItems2);
+        orderItemsRepository.saveAndFlush(orderItems1);
+        orderItemsRepository.saveAndFlush(orderItems2);
 
-        orderRepository.save(new Order(customer, orderItems1));
-        orderRepository.save(new Order(customer, orderItems2));
-        orderRepository.save(new Order(customer, orderItems3));
-        orderRepository.save(new Order(customer, orderItems1, orderItems2));
+        orderRepository.saveAndFlush(new Order(customer, orderItems1));
+        orderRepository.saveAndFlush(new Order(customer, orderItems2));
+        orderRepository.saveAndFlush(new Order(customer, orderItems3));
 
         // orderRepository.save(order3);
         // orderRepository.save(order4);
