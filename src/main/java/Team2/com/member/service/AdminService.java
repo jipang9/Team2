@@ -1,10 +1,12 @@
 package Team2.com.member.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
-public class AdminService {
+public interface AdminService {
 
-    private String name;
-    private String hidden;
+    List<MembersResponseDto> getMemberList();
+
+    List<SellersResponseDto> getSellerList();
+
+
 }
