@@ -6,6 +6,8 @@ import Team2.com.orderItem.entity.OrderItems;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 @Entity(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+// @ToString(of = {"id", "member", "orderItems"})
 public class Order {
 
     @Id
@@ -30,8 +33,13 @@ public class Order {
     public Order(Member member, OrderItems... orderItemList) {
         this.member = member;
         for (OrderItems orderItem : orderItemList) {
-            this.orderItems.add(orderItem);
-        }
+            addOrderItems(orderItem);
 
+        }
+    }
+
+    public void addOrderItems(OrderItems orderItems){
+        this.orderItems.add(orderItems);
+        orderItems.setOrderAndMember(this, this.member);
     }
 }
