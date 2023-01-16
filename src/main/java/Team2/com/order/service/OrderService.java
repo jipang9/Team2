@@ -10,6 +10,9 @@ import Team2.com.order.repository.OrderRepository;
 import Team2.com.orderItem.entity.OrderItems;
 import Team2.com.orderItem.repository.OrderItemsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,22 +44,32 @@ public class OrderService {
 
         OrderItems orderItems1 = new OrderItems(item1, 3);
         OrderItems orderItems2 = new OrderItems(item2, 2);
+        OrderItems orderItems3 = new OrderItems(item3, 4);
         orderItemsRepository.save(orderItems1);
         orderItemsRepository.save(orderItems2);
 
-        Order order = new Order(customer, orderItems1, orderItems2);
-        Order save = orderRepository.save(order);
-        Order findOrder = orderRepository.findById(save.getId()).get();
+        orderRepository.save(new Order(customer, orderItems1));
+        orderRepository.save(new Order(customer, orderItems2));
+        orderRepository.save(new Order(customer, orderItems3));
+        orderRepository.save(new Order(customer, orderItems1, orderItems2));
+
+        // orderRepository.save(order3);
+        // orderRepository.save(order4);
+        // Order findOrder = orderRepository.findById(save.getId()).get();
 
         // System.out.println("findOrder = " + findOrder);
     }
 
     public List<OrderDto.ResponseOrderDto> getOrders() {
-        List<Order> all = orderRepository.findAll();
-        List<OrderDto.ResponseOrderDto> collect = all.stream()
-                .map(v -> new OrderDto.ResponseOrderDto(v.getId(), v.getMember().getUsername(), v.getOrderItems()))
-                .collect(Collectors.toList());
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Order> page = orderRepository.findAll(pageRequest);
+        Page<OrderDto.ResponseOrderDto> map = page.map(order -> new OrderDto.ResponseOrderDto(order.getId(), order.getMember().getUsername(), order.getOrderItems()));
+        List<OrderDto.ResponseOrderDto> content = map.getContent();
 
-        return collect;
+        // List<OrderDto.ResponseOrderDto> collect = page.stream()
+        //         .map(v -> new OrderDto.ResponseOrderDto(v.getId(), v.getMember().getUsername(), v.getOrderItems()))
+        //         .collect(Collectors.toList());
+
+        return content;
     }
 }
