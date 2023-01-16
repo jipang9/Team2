@@ -4,13 +4,13 @@ package Team2.com.orderItem.entity;
 import Team2.com.item.entity.Item;
 import Team2.com.member.entity.Member;
 import Team2.com.order.entity.Order;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,14 +23,27 @@ public class OrderItems {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
+    private int count;
+
+    public OrderItems(Item item, int count) {
+        this.item = item;
+        this.count = count;
+    }
+
+    public void setOrderAndMember(Order order, Member member){
+        this.order = order;
+        this.member = member;
+    }
 }

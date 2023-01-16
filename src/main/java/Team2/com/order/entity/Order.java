@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Order {
@@ -26,4 +27,17 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItems> orderItems = new ArrayList<>();
+
+    public Order(Member member, OrderItems... orderItemList) {
+        this.member = member;
+        for (OrderItems orderItem : orderItemList) {
+            addOrderItems(orderItem);
+
+        }
+    }
+
+    public void addOrderItems(OrderItems orderItems){
+        this.orderItems.add(orderItems);
+        orderItems.setOrderAndMember(this, this.member);
+    }
 }
