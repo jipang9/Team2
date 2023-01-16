@@ -6,6 +6,7 @@ import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
 import Team2.com.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ public class ItemService {
 
     //전체 상품 조회
     @Transactional(readOnly = true)
-    public List<ItemDto.ResponseItemDto> getItemAllList() {
+    public List<ItemDto.ResponseItemDto> getItemAllList(PageRequest pageRequest) {
 
-        List<Item> items = itemRepository.findAllByOrderByIdDesc();
+        List<Item> items = itemRepository.findAllByOrderByIdDesc(pageRequest);
 
         List<ItemDto.ResponseItemDto> itemDtos = new ArrayList<>();
         for(int i=0; i<items.size(); i++){

@@ -5,6 +5,7 @@ import Team2.com.item.dto.ItemDto;
 import Team2.com.item.service.ItemService;
 import Team2.com.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,10 @@ public class ItemController {
     //모든 제품 조회
     @GetMapping("/products")
     //@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getItemAllList(){
-        List<ItemDto.ResponseItemDto> itemAllList = itemService.getItemAllList();
+    public ResponseEntity getItemAllList(@RequestParam("page") Integer page){
+        PageRequest pageRequest = PageRequest.of(page,10);
+
+        List<ItemDto.ResponseItemDto> itemAllList = itemService.getItemAllList(pageRequest);
         if(itemAllList.isEmpty()){
             return new ResponseEntity("등록된 상품이 없습니다.", HttpStatus.OK);
         }
@@ -38,9 +41,8 @@ public class ItemController {
         ItemDto.ResponseItemDto item = itemService.getItem(itemId);
 
         if(item==null){
-            return new ResponseEntity("찾으시는 제품이 존재하지 않습니다.", HttpStatus.OK);
+            return new ResponseEntity("제품이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
-
         return new ResponseEntity(item, HttpStatus.OK);
     }
 
