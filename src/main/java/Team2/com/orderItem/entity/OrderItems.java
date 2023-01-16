@@ -25,8 +25,12 @@ public class OrderItems {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private List<Item> itemList = new ArrayList<>();
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
 
 }
