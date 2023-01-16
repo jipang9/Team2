@@ -8,5 +8,8 @@ public interface AdminService {
 
     List<SellersResponseDto> getSellerList();
 
+    void addRoles();
+
+    void deleteRoles();
 
 }
