@@ -4,7 +4,7 @@ package Team2.com.item.controller;
 import Team2.com.item.dto.ItemDto;
 import Team2.com.item.service.ItemService;
 import Team2.com.member.entity.Member;
-import Team2.com.security.MemberRoleEnum;
+import Team2.com.member.entity.MemberRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/seller")
 public class ItemController {
 
-    private final ItemService itemService;
+    private final ItemService itemService; 
     private static final Member member = new Member("sein", "pass1234", MemberRoleEnum.SELLER);
 
     //모든 제품 조회
