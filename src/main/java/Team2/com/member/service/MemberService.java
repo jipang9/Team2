@@ -5,14 +5,10 @@ import Team2.com.member.dto.SellersResponseDto;
 
 import java.util.List;
 
-public interface AdminService {
+public interface MemberService{
 
     List<MembersResponseDto> getMemberList();
 
-    List<SellersResponseDto> getSellerList(String role);
-
-    void addRoles();
-
-    void deleteRoles();
+    List<SellersResponseDto> getSellersList(String role);
 
 }
