@@ -33,9 +33,10 @@ public class Item {
     @Column(name="item_count")
     private int count;          //제품 수량
 
-    public Item(String name, String content, int price, int count) {
+    public Item(String name, String content,Member member, int price, int count) {
         this.name = name;
         this.content = content;
+        this.member = member;
         this.price = price;
         this.count = count;
     }
