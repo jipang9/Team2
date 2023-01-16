@@ -1,4 +1,4 @@
-package Team2.com.security.dto;
+package Team2.com.member.dto.member;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

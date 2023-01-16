@@ -1,6 +1,6 @@
 package Team2.com.security.jwt;
 
-import Team2.com.security.dto.SecurityExceptionDto;
+import Team2.com.member.dto.member.SecurityExceptionDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;

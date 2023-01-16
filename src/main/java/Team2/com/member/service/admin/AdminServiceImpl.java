@@ -1,7 +1,7 @@
-package Team2.com.member.service;
+package Team2.com.member.service.admin;
 
-import Team2.com.member.dto.MembersResponseDto;
-import Team2.com.member.dto.SellersResponseDto;
+import Team2.com.member.dto.admin.MembersResponseDto;
+import Team2.com.member.dto.admin.SellersResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,17 +11,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService{
 
-    private final MemberService memberService;
+    private final AMemberService AMemberService;
 
     @Override
     public List<MembersResponseDto> getMemberList() {
-        List<MembersResponseDto> memberList = memberService.getMemberList();
+        List<MembersResponseDto> memberList = AMemberService.getMemberList();
         return memberList;
     }
 
     @Override
     public List<SellersResponseDto> getSellerList(String role) {
-        List<SellersResponseDto> sellersList = memberService.getSellersList(role);
+        List<SellersResponseDto> sellersList = AMemberService.getSellersList(role);
         return sellersList;
     }
 

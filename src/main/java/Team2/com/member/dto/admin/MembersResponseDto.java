@@ -1,9 +1,8 @@
-package Team2.com.member.dto;
+package Team2.com.member.dto.admin;
 
 
-import Team2.com.security.MemberRoleEnum;
+import Team2.com.member.entity.MemberRoleEnum;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class MembersResponseDto {
