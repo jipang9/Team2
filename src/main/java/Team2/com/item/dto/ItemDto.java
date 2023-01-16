@@ -37,11 +37,14 @@ public class ItemDto {
 
         private int count;
 
-        public ResponseItemDto(String itemName, String content, int price, int count){
+        private String sellerName;
+
+        public ResponseItemDto(String itemName, String content, int price, int count, String sellerName){
             this.itemName = itemName;
             this.content = content;
             this.price = price;
             this.count = count;
+            this.sellerName = sellerName;
         }
     }
 }
