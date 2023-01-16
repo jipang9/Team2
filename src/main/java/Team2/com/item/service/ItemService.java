@@ -16,8 +16,7 @@ public class ItemService {
 
     //상품등록 -> 확인해야할 부분 -> 1. 판매자 정보 가져오기 ->
     @Transactional
-    public void addItem(ItemDto.RequestItemDto requestItemDto) {
-
+    public void addItem(ItemDto.RequestItemDto requestItemDto, String ) {
 
     }
 }

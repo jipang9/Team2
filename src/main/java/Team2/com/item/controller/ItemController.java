@@ -18,6 +18,8 @@ public class ItemController {
 
     private final ItemService itemService;
 
+    private static final String sellerId = "sein";
+
     //모든 제품 조회
     @GetMapping("/products")
     //@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
@@ -37,7 +39,7 @@ public class ItemController {
     @PostMapping("/product")
     //@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public ResponseEntity addItem(@RequestBody ItemDto.RequestItemDto requestItemDto){
-        itemService.addItem(requestItemDto);
+        itemService.addItem(requestItemDto, sellerId);
         return new ResponseEntity("제품등록이 완료되었습니다.", HttpStatus.OK);
     }
 
