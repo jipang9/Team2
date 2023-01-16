@@ -1,9 +1,9 @@
-package Team2.com.security.controller;
+package Team2.com.member.controller;
 
-import Team2.com.security.dto.LoginRequestDto;
-import Team2.com.security.dto.MsgResponseDto;
-import Team2.com.security.dto.SignupRequestDto;
-import Team2.com.security.service.MemberService;
+import Team2.com.member.dto.member.LoginRequestDto;
+import Team2.com.member.dto.member.MsgResponseDto;
+import Team2.com.member.dto.member.SignupRequestDto;
+import Team2.com.member.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

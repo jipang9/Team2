@@ -1,7 +1,7 @@
-package Team2.com.member.service;
+package Team2.com.member.service.admin;
 
-import Team2.com.member.dto.MembersResponseDto;
-import Team2.com.member.dto.SellersResponseDto;
+import Team2.com.member.dto.admin.MembersResponseDto;
+import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class AMemberServiceImpl implements AMemberService {
 
     private final MemberRepository memberRepository;
 

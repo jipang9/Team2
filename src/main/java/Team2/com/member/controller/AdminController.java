@@ -1,8 +1,8 @@
 package Team2.com.member.controller;
 
-import Team2.com.member.service.AdminService;
-import Team2.com.member.dto.MembersResponseDto;
-import Team2.com.member.dto.SellersResponseDto;
+import Team2.com.member.service.admin.AdminService;
+import Team2.com.member.dto.admin.MembersResponseDto;
+import Team2.com.member.dto.admin.SellersResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

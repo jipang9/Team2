@@ -1,10 +1,10 @@
-package Team2.com.security.service;
+package Team2.com.member.service.member;
 
 import Team2.com.member.entity.Member;
 import Team2.com.member.repository.MemberRepository;
-import Team2.com.security.MemberRoleEnum;
-import Team2.com.security.dto.LoginRequestDto;
-import Team2.com.security.dto.SignupRequestDto;
+import Team2.com.member.entity.MemberRoleEnum;
+import Team2.com.member.dto.member.LoginRequestDto;
+import Team2.com.member.dto.member.SignupRequestDto;
 import Team2.com.security.exception.CustomException;
 import Team2.com.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -95,4 +95,6 @@ public class MemberService {
         //jwtUtil 를 사용하기 위해, 위에서 의존성 주입을 해줘야 함
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getUsername(), member.getRole()));
     }
+
+
 }

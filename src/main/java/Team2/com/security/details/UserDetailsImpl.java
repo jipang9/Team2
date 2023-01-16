@@ -1,7 +1,7 @@
-package Team2.com.security.security;
+package Team2.com.security.details;
 
 import Team2.com.member.entity.Member;
-import Team2.com.security.MemberRoleEnum;
+import Team2.com.member.entity.MemberRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

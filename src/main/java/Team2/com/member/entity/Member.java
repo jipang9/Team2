@@ -1,6 +1,5 @@
 package Team2.com.member.entity;
 
-import Team2.com.security.MemberRoleEnum;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

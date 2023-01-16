@@ -1,7 +1,7 @@
 package Team2.com.security.jwt;
 
-import Team2.com.security.MemberRoleEnum;
-import Team2.com.security.security.UserDetailsServiceImpl;
+import Team2.com.member.entity.MemberRoleEnum;
+import Team2.com.security.details.UserDetailsServiceImpl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

@@ -1,4 +1,4 @@
-package Team2.com.security.security;
+package Team2.com.security.details;
 
 import Team2.com.member.entity.Member;
 
