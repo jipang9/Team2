@@ -1,7 +1,8 @@
 package Team2.com.security.security;
 
 import Team2.com.member.entity.Member;
-import Team2.com.security.repository.MemberRepository;
+
+import Team2.com.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
