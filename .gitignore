@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 /src/test/**
 /src/main/resources/application.yml
-#/src/build.gradle
+/src/build.gradle
 *.yml
 
 ### STS ###
@@ -31,7 +31,7 @@ out/
 !**/src/test/**/out/
 *.yml
 /src/main/resources/application.yml
-#/src/build.gradle
+/src/build.gradle
 
 ### NetBeans ###
 /nbproject/private/
@@ -44,4 +44,4 @@ out/
 .vscode/
 /src/main/resources/application.yml
 *.yml
-#/src/build.gradle
+/src/build.gradle
