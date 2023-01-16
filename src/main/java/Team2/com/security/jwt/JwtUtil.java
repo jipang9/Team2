@@ -23,11 +23,9 @@ import java.util.Date;
 //@Slf4j: 로깅 추상화 라이브러리. 변수명이 log 로 고정된다
 //log 가 왜 필요한가?  로그를 작성해두면, 어떤 동작 중인지, 어느 부분에 에러가 났는지 파악 가능
 @Slf4j
-
 //Bean Configuration 파일에 Bean 을 따로 등록하지 않아도 사용 가능해짐
 //빈 등록을 위해
 @Component
-
 //final 또는 @NotNull 이 붙은 필드의 생성자를 자동 생성. 주로 의존성 주입(Dependency Injection) 편의성을 위해서 사용
 @RequiredArgsConstructor
 
@@ -51,7 +49,7 @@ public class JwtUtil {  //빈이 등록됐다는 '나뭇잎 모양' 확인 가�
 
     //@Value("${프로퍼티 키값}") : application.properties 에 정의한 내용을 가져와서 사용 가능
     //수정과 관리가 용이하기 때문에 이렇게 사용
-    @Value("${jwt.secret.key}")
+    @Value("${spring.jwt.secretKey}")
     private String secretKey;   //@Value() 안에 application.properties 에 넣어둔 KEY 값(jwt.secret.key=7ZWt7ZW0O...pA=)을 넣으면, 가져올 수 있음
     private Key key;    //Key 객체: Token 을 만들 때 넣어줄 KEY 값
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
