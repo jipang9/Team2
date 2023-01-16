@@ -6,8 +6,6 @@ import Team2.com.orderItem.entity.OrderItems;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import java.util.List;
 @Entity(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-// @ToString(of = {"id", "member", "orderItems"})
 public class Order {
 
     @Id
