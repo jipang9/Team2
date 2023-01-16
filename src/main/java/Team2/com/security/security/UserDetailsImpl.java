@@ -21,14 +21,14 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     //인증완료된 User 를 가져오는 Getter
-    public Member getUser() {
+    public Member getMember() {
         return member;
     }
 
     //사용자의 권한 GrantedAuthority 로 추상화 및 반환
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        MemberRoleEnum role = Member.getRole();
+        MemberRoleEnum role = member.getRole();
         String authority = role.getAuthority();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
