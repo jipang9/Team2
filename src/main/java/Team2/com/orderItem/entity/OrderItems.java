@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 import javax.persistence.*;
 
 @Entity
@@ -36,5 +37,10 @@ public class OrderItems {
     public OrderItems(Item item, int count) {
         this.item = item;
         this.count = count;
+    }
+
+    public void setOrderAndMember(Order order, Member member){
+        this.order = order;
+        this.member = member;
     }
 }

@@ -18,17 +18,13 @@ public class AdminController {
 
     @GetMapping("/members")
     public ResponseEntity<List<MembersResponseDto>> getMemberList(){
-
-        // 사용자(일반유저) 정보들을 List 형식으로 넘겨준다  -> 어떤 정보를 가지고 올래?
-
+        // 사용자(일반유저) 정보들을 List 형식으로넘겨준다  -> 어떤 정보를 가지고 올래?
         return ResponseEntity.status(200).build();
     }
 
     @GetMapping("/sellers")
     public ResponseEntity<List<SellersResponseDto>> getSellerList(){
-
         // 사용자(판매자) 정보들을 가지고 올 것(List) -> 어떤 정보를 가지고 올래?
-
         return ResponseEntity.status(200).build(); // 이 부분 body로 바꿀예정
     }
 
