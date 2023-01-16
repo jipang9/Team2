@@ -31,4 +31,10 @@ public class OrderItems {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    private int count;
+
+    public OrderItems(Item item, int count) {
+        this.item = item;
+        this.count = count;
+    }
 }
