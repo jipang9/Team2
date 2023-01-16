@@ -30,8 +30,13 @@ public class Order {
     public Order(Member member, OrderItems... orderItemList) {
         this.member = member;
         for (OrderItems orderItem : orderItemList) {
-            this.orderItems.add(orderItem);
-        }
+            addOrderItems(orderItem);
 
+        }
+    }
+
+    public void addOrderItems(OrderItems orderItems){
+        this.orderItems.add(orderItems);
+        orderItems.setOrderAndMember(this, this.member);
     }
 }
