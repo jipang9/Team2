@@ -51,7 +51,11 @@ public class Item {
         this.count = count;
     }
 
-    public void removeCount(int count){
-        this.count = this.count - count;
+    public void removeCount(int count) {
+        int restCount = this.count - count;
+        if(restCount < 0){
+            throw new IllegalArgumentException("수량이 부족합니다.");
+        }
+        this.count = restCount;
     }
 }

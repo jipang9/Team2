@@ -39,7 +39,7 @@ public class OrderItems {
     }
 
     // 생성 메서드
-    public static OrderItems createOrderItems(Item item, int count){
+    public static OrderItems createOrderItems(Item item, int count) {
         OrderItems orderItems = new OrderItems();
         orderItems.update(item, count);
         Item getItem = orderItems.getItem();
