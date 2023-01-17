@@ -14,11 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,4 +67,58 @@ public class OrderService {
 
         return result;
     }
+
+    //(판매자) 주문내역 전체 조회
+    @Transactional
+    public List<OrderDto.Response> getAllCustomerBuyList(PageRequest pageRequest, String sellerName) {
+
+        Page<Order> page = orderRepository.findAll(pageRequest);
+        List<OrderDto.Response> resultList = new ArrayList<>();
+
+        Iterator<Order> keys = page.iterator();
+        while( keys.hasNext() ){
+            Order key = keys.next();
+
+            for(int i=0; i<key.getOrderItems().size(); i++){
+                if(sellerName.equals(key.getOrderItems().get(i).getItem().getMember().getUsername())){
+                    resultList.add(new OrderDto.Response(key.getId(), key.getMember().getUsername(), key.getOrderItems()));
+                }
+            }
+        }
+        return resultList;
+    }
+
+    //(판매자)주문 내역 조회
+    @Transactional(readOnly = true)
+    public OrderDto.Response getCustomerBuyItem(Long orderId, String sellerName) {
+
+        //주문조회
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new IllegalArgumentException("주문내역이 존재하지 않습니다."));
+
+        //판매자 상품이 맞는지 확인
+        for(int i=0; i<order.getOrderItems().size(); i++){
+            if(!order.getOrderItems().get(0).getItem().getMember().getUsername().equals(sellerName)){
+                throw new IllegalArgumentException("판매자의 상품과 일치하지 않습니다.");
+            }
+        }
+        return new OrderDto.Response(order.getId(), order.getMember().getUsername(), order.getOrderItems());
+    }
+
+    //(판매자)주문완료처리
+    @Transactional
+    public void orderCompleteProceeding(Long orderId, String sellerName) {
+
+        //주문조회
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new IllegalArgumentException("주문내역이 존재하지 않습니다."));
+
+        //판매자 상품이 맞는지 확인
+        for(int i=0; i<order.getOrderItems().size(); i++){
+            if(!order.getOrderItems().get(0).getItem().getMember().getUsername().equals(sellerName)){
+                throw new IllegalArgumentException("판매자의 상품과 일치하지 않습니다.");
+            }
+        }
+        //주문상태 변경
+        order.updateOrderStatus();
+    }
+
 }
