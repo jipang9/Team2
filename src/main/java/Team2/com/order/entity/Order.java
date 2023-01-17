@@ -28,6 +28,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItems> orderItems = new ArrayList<>();
 
+    public void setMember(Member member){
     @Column(nullable = false)
     private boolean orderStatus = false;
 
@@ -35,12 +36,24 @@ public class Order {
         this.member = member;
         for (OrderItems orderItem : orderItemList) {
             addOrderItems(orderItem);
+
         }
     }
 
     public void addOrderItems(OrderItems orderItems){
         this.orderItems.add(orderItems);
-        orderItems.setOrderAndMember(this, this.member);
+        orderItems.setOrder(this);
+    }
+
+
+    // 생성 메서드
+    public static Order createOrder(Member member, List<OrderItems> orderItems){
+        Order order = new Order();
+        order.setMember(member);
+        for (OrderItems orderItem : orderItems) {
+            order.addOrderItems(orderItem);
+        }
+        return order;
     }
 
     public void updateOrderStatus(){

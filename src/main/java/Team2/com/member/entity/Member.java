@@ -29,16 +29,8 @@ public class Member{
         this.role = role;
     }
 
-    public Member(Long id, String username, String password, MemberRoleEnum role) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
-
-    public void chanegRole(MemberRoleEnum role){
+    public void changeRole(MemberRoleEnum role){
         this.role= role;
-
     }
 
 }

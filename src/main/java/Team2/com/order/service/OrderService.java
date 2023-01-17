@@ -14,9 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,43 +29,43 @@ public class OrderService {
     private final OrderItemsRepository orderItemsRepository;
     private final ItemRepository itemRepository;
 
-    public void createOrder(Member seller, Member customer, Item item1, Item item2, Item item3) {
-        memberRepository.saveAndFlush(seller);
-        memberRepository.saveAndFlush(customer);
+    public void order(List<OrderDto.RequestItemDto> items, Member member) {
+        // 1. 주문할 Item 불러오기
+        ArrayList<Long> orderItemIds = new ArrayList();
+        for (OrderDto.RequestItemDto item : items) {
+            Item findItem = itemRepository.findById(item.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
+            );
 
-        itemRepository.saveAndFlush(item1);
-        itemRepository.saveAndFlush(item2);
-        itemRepository.saveAndFlush(item3);
+            // 2. OrderItem 만들기
+            OrderItems orderItems = OrderItems.createOrderItems(findItem, item.getCount());
+            OrderItems saveOrderItem = orderItemsRepository.saveAndFlush(orderItems);
+            orderItemIds.add(saveOrderItem.getId());
+        }
 
+        // 3. OrderItem 가져오기
+        List<OrderItems> orderItems = new ArrayList<>();
 
-        OrderItems orderItems1 = new OrderItems(item1, 3);
-        OrderItems orderItems2 = new OrderItems(item2, 2);
-        OrderItems orderItems3 = new OrderItems(item3, 4);
-        orderItemsRepository.saveAndFlush(orderItems1);
-        orderItemsRepository.saveAndFlush(orderItems2);
+        for (Long orderItemId : orderItemIds) {
+            Optional<OrderItems> findOrderItem = orderItemsRepository.findById(orderItemId);
+            orderItems.add(findOrderItem.get());
+        }
 
-        orderRepository.saveAndFlush(new Order(customer, orderItems1));
-        orderRepository.saveAndFlush(new Order(customer, orderItems2));
-        orderRepository.saveAndFlush(new Order(customer, orderItems3));
-
-        // orderRepository.save(order3);
-        // orderRepository.save(order4);
-        // Order findOrder = orderRepository.findById(save.getId()).get();
-
-        // System.out.println("findOrder = " + findOrder);
+        // 4. Order 테이블에 저장하기
+        Order order = Order.createOrder(member, orderItems);
+        orderRepository.saveAndFlush(order);
     }
 
-    public List<OrderDto.ResponseOrderDto> getOrders() {
-        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.ASC, "id"));
+    public OrderDto.Result getOrders(int offset, int limit) {
+        PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
         Page<Order> page = orderRepository.findAll(pageRequest);
-        Page<OrderDto.ResponseOrderDto> map = page.map(order -> new OrderDto.ResponseOrderDto(order.getId(), order.getMember().getUsername(), order.getOrderItems()));
-        List<OrderDto.ResponseOrderDto> content = map.getContent();
+        Page<OrderDto.Response> map = page.map(order -> new OrderDto.Response(order.getId(), order.getMember().getUsername(), order.getOrderItems()));
+        List<OrderDto.Response> content = map.getContent(); // Order 배열
+        long totalCount = map.getTotalElements(); // Order 전체 개수
 
-        // List<OrderDto.ResponseOrderDto> collect = page.stream()
-        //         .map(v -> new OrderDto.ResponseOrderDto(v.getId(), v.getMember().getUsername(), v.getOrderItems()))
-        //         .collect(Collectors.toList());
+        OrderDto.Result result = new OrderDto.Result(offset, totalCount, content);
 
-        return content;
+        return result;
     }
 
     //(판매자) 주문내역 전체 조회
@@ -78,7 +80,7 @@ public class OrderService {
         return ;
     }
 
-    
+
     //(판매자)주문 내역 조회
     @Transactional(readOnly = true)
     public OrderDto.ResponseOrderDto getCustomerBuyItem(Long orderId, String sellerName) {
