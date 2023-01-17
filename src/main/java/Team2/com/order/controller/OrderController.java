@@ -27,8 +27,16 @@ import java.util.List;
 @RequestMapping("/api")
 public class OrderController {
     private final OrderService orderService;
+    private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
+
+
+    private static final Member seller = new Member("판매자", "1234", MemberRoleEnum.SELLER);
+    private static final Member customer = new Member("구매자", "1234", MemberRoleEnum.CUSTOMER);
+    private static final Item item1 = new Item("칫솔", "이닦는 도구", seller, 3000, 100);
+    private static final Item item2 = new Item("연필", "글쓰는 도구", seller,1000, 100);
+    private static final Item item3 = new Item("신발", "신는거", seller, 60000, 100);
 
     @PostMapping("/customer/orders")
     public ResponseEntity createOrder(@RequestBody OrderDto.Request requestOrderDto, HttpServletRequest request){
@@ -59,12 +67,13 @@ public class OrderController {
     //나(판매자)의 모든 주문 목록 list 조회
     @GetMapping("/seller/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getAllCustomerBuyList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity getAllCustomerBuyList(@RequestParam("page") Integer page, @AuthenticationPrincipal UserDetails userDetails){
+        PageRequest pageRequest = PageRequest.of(page,10);
 
-        OrderDto.Result orderAllList = orderService.getAllCustomerBuyList(offset, limit, userDetails.getUsername());
+        List<OrderDto.Response> orderAllList = orderService.getAllCustomerBuyList(pageRequest, userDetails.getUsername());
 
-        if(orderAllList.getCount()==0){
-            return new ResponseEntity("현재 판매하는 상품이 없습니다.", HttpStatus.OK);
+        if(orderAllList.isEmpty()){
+            return new ResponseEntity("주문 내역이 존재 하지않습니다.", HttpStatus.OK);
         }
         return new ResponseEntity(orderAllList, HttpStatus.OK);
     }
