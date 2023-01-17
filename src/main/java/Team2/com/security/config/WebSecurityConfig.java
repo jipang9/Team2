@@ -49,7 +49,7 @@ public class WebSecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         //permitAll() 를 사용해서, 이런 URL 들을 인증하지 않고 실행 할 수 있게 함
-        http.authorizeRequests().antMatchers("/api/auth/**").permitAll()
+        http.authorizeRequests().antMatchers("/api/member/**").permitAll()
                 //그 이외의 URL 요청들을 전부 다 authentication(인증 처리)하겠다
                 .anyRequest().authenticated()
                 // JWT 인증/인가를 사용하기 위한 설정
