@@ -3,117 +3,29 @@ package Team2.com.member.service.member;
 import Team2.com.member.dto.admin.MembersResponseDto;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.dto.member.ApplyRequestDto;
-import Team2.com.member.entity.Member;
-import Team2.com.member.entity.Request;
-import Team2.com.member.entity.Status;
-import Team2.com.member.repository.MemberRepository;
-import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.dto.member.LoginRequestDto;
 import Team2.com.member.dto.member.SignupRequestDto;
-import Team2.com.member.repository.RequestRepository;
-import Team2.com.security.exception.CustomException;
-import Team2.com.security.jwt.JwtUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
+import Team2.com.member.entity.Member;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
-import static Team2.com.security.exception.ErrorCode.*;
+public interface MemberService {
 
-@Service
+    void signup(SignupRequestDto signupRequestDto); // 회원가입
 
-@Validated
-@RequiredArgsConstructor
-@Slf4j
-public class MemberService {
+    void login(LoginRequestDto loginRequestDto, HttpServletResponse response); // 로그인
 
-    private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
-    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
-    private final RequestRepository requestRepository;
+    List<MembersResponseDto> getMemberLists(); // 유저 listUp(페이징 x)
 
-    @Transactional
-    public void signup(@Valid SignupRequestDto signupRequestDto) {
+    List<SellersResponseDto> getSellerLists(); // 판매자 listUp ( 페이징 x )
 
-        String username = signupRequestDto.getUsername();
-        String password = passwordEncoder.encode(signupRequestDto.getPassword());
+    void apply(ApplyRequestDto applyRequestDto, Member member); // 사용자 요청(등업, 강등)
 
-        Optional<Member> found = memberRepository.findByUsername(signupRequestDto.getUsername());
-        if (found.isPresent()) {
-            throw new CustomException(DUPLICATED_USERNAME);
-        }
+    List<SellersResponseDto> getSellerOne(String sellerId); // 판매자 한명 조회
 
-        MemberRoleEnum role = MemberRoleEnum.CUSTOMER;
+    void checkByRequest(Long id); // 사용자 요청이 있는지 확인
 
-        if (signupRequestDto.isAdmin()) {
-            if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-
-                throw new CustomException(INVALID_TOKEN);
-            }
-            role = MemberRoleEnum.ADMIN;
-        }
-        Member user = new Member(username, password, role);
-        memberRepository.save(user);
-    }
-
-    //로그인 구현
-    @Transactional(readOnly = true)
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        String username = loginRequestDto.getUsername();
-        String password = loginRequestDto.getPassword();
-
-        Member member = memberRepository.findByUsername(username).orElseThrow(
-                () -> new CustomException(NOT_FOUND_USER)
-        );
-
-        if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new CustomException(NOT_MATCH_INFORMATION);
-        }
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getUsername(), member.getRole()));
-    }
-
-    public List<MembersResponseDto> getMemberLists() {
-        return memberRepository.findAllByMembers();
-    }
-
-    public List<SellersResponseDto> getSellerLists() {
-        return memberRepository.findAllBySellers();
-    }
-
-
-    public void apply(ApplyRequestDto applyRequestDto, Member member) {
-        Optional<Request> check = requestRepository.findByMember(member.getId());
-        if(check.isEmpty()==true) { // 해당 사용자가 이미 등록을 했는지 안했는지 확인
-            if(applyRequestDto.getStatus().equals("UP")) {
-                if(member.getRole().equals("SELLER")) {
-                    Request request = new Request(member.getId(), member.getRole().toString(), Status.UP.toString());
-                    requestRepository.save(request);
-                }else{
-                    throw new CustomException(ERROR_DATA_BY_ROLE);
-                }
-            }else if(applyRequestDto.getStatus().equals("DOWN")){
-                Request request = new Request(member.getId(), member.getRole().toString(),Status.DOWN.toString());
-                requestRepository.save(request);
-            }else{
-                throw new CustomException(ERROR_DATA_BY_ROLE); //
-            }
-        }
-        else
-            throw new CustomException(MEMBER_Already_REQUEST); // 이미 요청 했음
-    }
-
-    public List<SellersResponseDto> getSellerOne(String sellerId) {
-        return memberRepository.findBySellerId(Long.valueOf(sellerId));
-    }
-
-    // 문제있나?
+    void checkByMemberDuplicated(String username); // 사용자 중복 확인
 
 }
