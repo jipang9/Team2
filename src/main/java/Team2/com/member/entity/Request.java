@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="Request", uniqueConstraints = {@UniqueConstraint(columnNames = {"member_role","member_status","member_id"})})
 public class Request {
 
     @Id
@@ -23,7 +22,7 @@ public class Request {
     @Column(name = "member_status")
     private String status;
 
-    @Column(name = "member_id")
+    @Column(name = "member_id", unique = true)
     private Long user;
 
     public Request(Long member, String role, String status) {
