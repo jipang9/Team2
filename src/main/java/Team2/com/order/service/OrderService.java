@@ -24,11 +24,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
     private final OrderItemsRepository orderItemsRepository;
     private final ItemRepository itemRepository;
 
-    public void createOrder(List<OrderDto.RequestItemDto> items, Member member) {
+    public void order(List<OrderDto.RequestItemDto> items, Member member) {
         // 1. 주문할 상품 불러오기
         for (OrderDto.RequestItemDto item : items) {
             Item findItem = itemRepository.findById(item.getId()).orElseThrow(
@@ -36,39 +35,16 @@ public class OrderService {
             );
 
             // 2. OrderItem 만들기
-            OrderItems orderItems = new OrderItems(findItem, item.getCount());
+            OrderItems orderItems = OrderItems.createOrderItems(findItem, item.getCount());
             orderItemsRepository.saveAndFlush(orderItems);
 
         }
 
         List<OrderItems> orderItems = orderItemsRepository.findAll();
 
-        System.out.println("member.getId() = " + member.getId());
-        System.out.println("member.getUsername() = " + member.getUsername());
-        orderRepository.saveAndFlush(new Order(member, orderItems));
-
-        // 3. Order 만들어서 저장하기
-        // for (Long orderItemId : orderItemIds) {
-        //     System.out.println("orderItemId = " + orderItemId);
-        // }
-        
-        
-        
-        // OrderItems orderItems1 = new OrderItems(item1, 3);
-        // OrderItems orderItems2 = new OrderItems(item2, 2);
-        // OrderItems orderItems3 = new OrderItems(item3, 4);
-        // orderItemsRepository.saveAndFlush(orderItems1);
-        // orderItemsRepository.saveAndFlush(orderItems2);
-        //
-        // orderRepository.saveAndFlush(new Order(customer, orderItems1));
-        // orderRepository.saveAndFlush(new Order(customer, orderItems2));
-        // orderRepository.saveAndFlush(new Order(customer, orderItems3));
-
-        // orderRepository.save(order3);
-        // orderRepository.save(order4);
-        // Order findOrder = orderRepository.findById(save.getId()).get();
-
-        // System.out.println("findOrder = " + findOrder);
+        // 3. Order 테이블에 저장하기
+        Order order = Order.createOrder(member, orderItems);
+        orderRepository.saveAndFlush(order);
     }
 
     public List<OrderDto.Response> getOrders() {

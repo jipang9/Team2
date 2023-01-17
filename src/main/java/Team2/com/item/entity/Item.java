@@ -50,4 +50,8 @@ public class Item {
         this.price = price;
         this.count = count;
     }
+
+    public void removeCount(int count){
+        this.count = this.count - count;
+    }
 }

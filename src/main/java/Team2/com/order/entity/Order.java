@@ -28,16 +28,23 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItems> orderItems = new ArrayList<>();
 
-    public Order(Member member, List<OrderItems> orderItemList) {
+    public void setMember(Member member){
         this.member = member;
-        for (OrderItems orderItem : orderItemList) {
-            addOrderItems(orderItem);
-
-        }
     }
 
     public void addOrderItems(OrderItems orderItems){
         this.orderItems.add(orderItems);
-        // orderItems.setOrderAndMember(this, this.member);
+        orderItems.setOrder(this);
+    }
+
+
+    // 생성 메서드
+    public static Order createOrder(Member member, List<OrderItems> orderItems){
+        Order order = new Order();
+        order.setMember(member);
+        for (OrderItems orderItem : orderItems) {
+            order.addOrderItems(orderItem);
+        }
+        return order;
     }
 }

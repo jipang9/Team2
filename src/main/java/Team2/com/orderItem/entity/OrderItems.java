@@ -17,34 +17,35 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class OrderItems {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "member_id")
-    // @JsonIgnore
-    // private Member member;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     @JsonIgnore
     private Order order;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
-
     private int count;
 
-    public OrderItems(Item item, int count) {
+    public void update(Item item, int count){
         this.item = item;
         this.count = count;
     }
 
-    // public void setOrderAndMember(Order order, Member member){
-    //     this.order = order;
-    //     this.member = member;
-    // }
+    public void setOrder(Order order){
+        this.order = order;
+    }
+
+    // 생성 메서드
+    public static OrderItems createOrderItems(Item item, int count){
+        OrderItems orderItems = new OrderItems();
+        orderItems.update(item, count);
+        Item getItem = orderItems.getItem();
+
+        getItem.removeCount(count); // Item 수량 감소
+
+        return orderItems;
+    }
 }
