@@ -1,14 +1,17 @@
 package Team2.com.member.controller;
 
 import Team2.com.member.dto.admin.SellersResponseDto;
+import Team2.com.member.dto.member.ApplyRequestDto;
 import Team2.com.member.dto.member.LoginRequestDto;
 import Team2.com.member.dto.member.MsgResponseDto;
 import Team2.com.member.dto.member.SignupRequestDto;
 import Team2.com.member.entity.Member;
 import Team2.com.member.service.member.MemberService;
+import Team2.com.security.details.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,4 +68,12 @@ public class MemberController {
         return new ResponseEntity(sellerLists, HttpStatus.OK);
 
     }
+    @PostMapping("/apply")
+    public HttpStatus apply(@RequestBody ApplyRequestDto applyRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetailsimpl){
+        memberService.apply(applyRequestDto, userDetailsimpl.getMember());
+        return HttpStatus.OK;
+    }
+
+
+
 }

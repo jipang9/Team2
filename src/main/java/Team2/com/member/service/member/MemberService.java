@@ -99,6 +99,9 @@ public class MemberService {
             throw new IllegalStateException("등록 에러 발생");
         }
     }
+    public List<SellersResponseDto> getSellerOne(String sellerId) {
+        return memberRepository.findBySellerId(Long.valueOf(sellerId));
+    }
 
 
 }
