@@ -5,6 +5,7 @@ import Team2.com.member.dto.admin.MembersResponseDto;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class AdminController {
 
     private final AdminService adminService;
@@ -22,14 +24,14 @@ public class AdminController {
     }
 
     @GetMapping("/sellers")
-    public ResponseEntity<List<SellersResponseDto>> getSellerList(String role){
-        return ResponseEntity.status(200).body(adminService.getSellerList(role));
-    }
+        public ResponseEntity<List<SellersResponseDto>> getSellerList(){
+            return ResponseEntity.status(200).body(adminService.getSellerList());
+        }
 
-    @PostMapping("/addrole/{id}")
-    public ResponseEntity<Void> addRoles(){
-        adminService.addRoles();
-        return ResponseEntity.status(201).build();
+        @PostMapping("/addrole/{id}")
+        public ResponseEntity<Void> addRoles(@PathVariable Long id){
+            adminService.addRoles(id);
+            return ResponseEntity.status(201).build();
     }
 
     @DeleteMapping("/deleterole/{id}")

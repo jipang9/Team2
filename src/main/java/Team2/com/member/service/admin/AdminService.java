@@ -9,9 +9,9 @@ public interface AdminService {
 
     List<MembersResponseDto> getMemberList();
 
-    List<SellersResponseDto> getSellerList(String role);
+    List<SellersResponseDto> getSellerList();
 
-    void addRoles();
+    void addRoles(Long id);
 
     void deleteRoles();
 

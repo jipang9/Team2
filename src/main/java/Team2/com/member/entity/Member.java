@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Member {
+public class Member{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +35,10 @@ public class Member {
         this.password = password;
         this.role = role;
     }
+
+    public void chanegRole(MemberRoleEnum role){
+        this.role= role;
+
+    }
+
 }

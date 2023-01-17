@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity // 스프링 Security 지원을 가능하게 함
-@EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
@@ -30,15 +30,14 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    //WebSecurityCustomizer 은 SecurityFilterChain 보다 우선적으로 걸리는 설정
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        //h2-console 사용 및 resources 접근 허용 설정
-        //ignoring(): 이러한 경로도 들어온 것들은 인증 처리하는 것을 무시하겠다
-        return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console());
-
-    }
+//    @Bean
+//    //WebSecurityCustomizer 은 SecurityFilterChain 보다 우선적으로 걸리는 설정
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        //h2-console 사용 및 resources 접근 허용 설정
+//        //ignoring(): 이러한 경로도 들어온 것들은 인증 처리하는 것을 무시하겠다
+//        return (web) -> web.ignoring()
+//                .requestMatchers(PathRequest.toH2Console());
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,8 +56,6 @@ public class WebSecurityConfig {
                 //addFilterBefore: 어떤 Filter 이전에 추가하겠다 --> 우리가 만든 JwtAuthFilter 를 UsernamePasswordAuthenticationFilter 이전에 실행할 수 있도록
                 //1. JwtAuthFilter 를 통해 인증 객체를 만들고 --> 2. context 에 추가 --> 3.인증 완료 --> UsernamePasswordAuthenticationFilter 수행 --> 인증됐으므로 다음 Filter 로 이동 --> Controller 까지도 이동
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
-
         return http.build();
     }
 }

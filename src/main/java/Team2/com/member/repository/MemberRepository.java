@@ -16,12 +16,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsername(String username);
 
     @Query("select m from Member m order by m.id desc")
-    List<MembersResponseDto> findAllByMembers(); // 사용자 전체가지고 와야함 + responseDto에 데이터 추가할 것.
+    List<MembersResponseDto> findAllByMembers();
 
-
-    @Query("select m from Member m where m.role=:SELLER")
-    List<SellersResponseDto> findAllBySellers(@Param("SELLER")String SELLER);
-
-    @Query("select m from Member m where m.role=:SELLER")
-    List<SellersResponseDto> findAllBySellerss(@Param("SELLER") MemberRoleEnum SELLER);
+    @Query("select m from Member m where m.role='SELLER'")
+    List<SellersResponseDto> findAllBySellers();
 }

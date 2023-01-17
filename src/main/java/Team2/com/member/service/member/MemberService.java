@@ -1,5 +1,7 @@
 package Team2.com.member.service.member;
 
+
+import Team2.com.member.dto.admin.MembersResponseDto;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.entity.Member;
 import Team2.com.member.repository.MemberRepository;
@@ -98,9 +100,15 @@ public class MemberService {
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getUsername(), member.getRole()));
     }
 
-    @Transactional(readOnly = true)
-    public List<SellersResponseDto> getSellerList() {
-        MemberRoleEnum seller = MemberRoleEnum.SELLER;
-        return memberRepository.findAllBySellerss(seller);
+    // 김지환 작업 -> 사용자 정보 가지고 오기
+    public List<MembersResponseDto> getMemberLists(){
+        return memberRepository.findAllByMembers();
     }
+
+    // 김지환 작업 -> 판매자 정보 가지고 오기
+    public List<SellersResponseDto> getSellerLists(){
+        return memberRepository.findAllBySellers();
+    }
+
+
 }
