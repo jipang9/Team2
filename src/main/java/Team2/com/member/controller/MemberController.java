@@ -1,8 +1,10 @@
 package Team2.com.member.controller;
 
+import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.dto.member.LoginRequestDto;
 import Team2.com.member.dto.member.MsgResponseDto;
 import Team2.com.member.dto.member.SignupRequestDto;
+import Team2.com.member.entity.Member;
 import Team2.com.member.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 //Client 요청으로부터 view 를 반환. MVC 패턴의 Controller 클래스임을 명시
 @RestController
-@RequestMapping("/api/member")
+
 //final 또는 @NotNull 이 붙은 필드의 생성자를 자동 생성. 주로 의존성 주입(Dependency Injection) 편의성을 위해서 사용
 @RequiredArgsConstructor
+@RequestMapping("/api/member")
 public class MemberController {
 
     //HTTP request 를 받아서, Service 쪽으로 넘겨주고, 가져온 데이터들을 requestDto 파라미터로 보냄
@@ -48,5 +52,17 @@ public class MemberController {
         //MsgResponseDto 에서 선언한 타입(여기서는 String message, int statusCode)으로 반환하는데,
         //ResponseEntity.ok(): 상태코드를 반환
         return ResponseEntity.ok(new MsgResponseDto("로그인 완료", HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/sellers")
+    public ResponseEntity<List<SellersResponseDto>> getSellerList(@RequestParam(defaultValue = "0") String sellerId){
+        List<SellersResponseDto> sellerLists;
+        if(sellerId == "0"){
+            sellerLists = memberService.getSellerLists();
+        }else{
+            sellerLists = memberService.getSellerOne(sellerId);
+        }
+        return new ResponseEntity(sellerLists, HttpStatus.OK);
+
     }
 }

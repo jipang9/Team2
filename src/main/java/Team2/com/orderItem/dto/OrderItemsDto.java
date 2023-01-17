@@ -2,17 +2,21 @@ package Team2.com.orderItem.dto;
 
 import lombok.Getter;
 
-@Getter
-public class OrderItemsDto {
-    private Long id;
-    private String itemName;
-    private int price;
-    private int count;
 
-    public OrderItemsDto(Long id, String itemName, int price, int count) {
-        this.id = id;
-        this.itemName = itemName;
-        this.price = price;
-        this.count = count;
+public class OrderItemsDto {
+    @Getter
+    public static class Request{
+
     }
+    @Getter
+    public static class Response{
+        private Long id;
+        private String itemName;
+
+        public Response(Long id, String itemName) {
+            this.id = id;
+            this.itemName = itemName;
+        }
+    }
+
 }

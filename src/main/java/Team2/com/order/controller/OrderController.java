@@ -2,20 +2,34 @@ package Team2.com.order.controller;
 
 
 import Team2.com.item.entity.Item;
+import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
+import Team2.com.member.repository.MemberRepository;
 import Team2.com.order.dto.OrderDto;
 import Team2.com.order.service.OrderService;
 import Team2.com.member.entity.MemberRoleEnum;
+import Team2.com.orderItem.entity.OrderItems;
+import Team2.com.security.jwt.JwtUtil;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/customer")
 public class OrderController {
     private final OrderService orderService;
+    private final ItemRepository itemRepository;
+    private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
+
 
     private static final Member seller = new Member("판매자", "1234", MemberRoleEnum.SELLER);
     private static final Member customer = new Member("구매자", "1234", MemberRoleEnum.CUSTOMER);
@@ -24,18 +38,27 @@ public class OrderController {
     private static final Item item3 = new Item("신발", "신는거", seller, 60000, 100);
 
     @PostMapping("/orders")
-    public void createOrder(){
-        // memberRepository.save(seller);
-        // memberRepository.save(customer);
-
-        // itemRepository.save(item1);
-        // itemRepository.save(item2);
-        // itemRepository.save(item3);
-        orderService.createOrder(seller, customer, item1, item2, item3);
+    public ResponseEntity createOrder(@RequestBody OrderDto.Request requestOrderDto, HttpServletRequest request){
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+        if(token != null){
+            if (jwtUtil.validateToken(token)) {
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+            Member member = memberRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+            orderService.order(requestOrderDto.getItems(), member);
+            return new ResponseEntity("주문이 완료되었습니다.", HttpStatus.OK);
+        }
+        return new ResponseEntity("주문을 실패했습니다.", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/orders")
-    public List<OrderDto.ResponseOrderDto> getOrders(){
-        return orderService.getOrders();
+    public ResponseEntity<List<OrderDto.Result>> getOrders(@RequestParam int offset, @RequestParam int limit){
+        OrderDto.Result orders = orderService.getOrders(offset, limit);
+        return new ResponseEntity(orders, HttpStatus.OK);
     }
 }
