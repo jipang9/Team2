@@ -1,5 +1,7 @@
 package Team2.com.member.service.member;
 
+import Team2.com.member.dto.admin.MembersResponseDto;
+import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.entity.Member;
 import Team2.com.member.repository.MemberRepository;
 import Team2.com.member.entity.MemberRoleEnum;
@@ -15,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static Team2.com.security.exception.ErrorCode.*;
@@ -96,5 +99,15 @@ public class MemberService {
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getUsername(), member.getRole()));
     }
 
+
+    // 김지환 작업 -> 사용자 정보 가지고 오기
+    public List<MembersResponseDto> getMemberLists(){
+        return memberRepository.findAllByMembers();
+    }
+
+    // 김지환 작업 -> 판매자 정보 가지고 오기
+    public List<SellersResponseDto> getSellerLists(){
+        return memberRepository.findAllBySellers();
+    }
 
 }

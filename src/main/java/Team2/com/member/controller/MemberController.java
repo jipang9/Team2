@@ -8,19 +8,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 //Client 요청으로부터 view 를 반환. MVC 패턴의 Controller 클래스임을 명시
-@Controller
-
+@RestController
+@RequestMapping("/api/member")
 //final 또는 @NotNull 이 붙은 필드의 생성자를 자동 생성. 주로 의존성 주입(Dependency Injection) 편의성을 위해서 사용
 @RequiredArgsConstructor
-
 public class MemberController {
 
     //HTTP request 를 받아서, Service 쪽으로 넘겨주고, 가져온 데이터들을 requestDto 파라미터로 보냄
