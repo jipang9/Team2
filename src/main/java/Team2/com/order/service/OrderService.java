@@ -28,7 +28,8 @@ public class OrderService {
     private final ItemRepository itemRepository;
 
     public void order(List<OrderDto.RequestItemDto> items, Member member) {
-        // 1. 주문할 상품 불러오기
+        // 1. 주문할 Item 불러오기
+        ArrayList<Long> orderItemIds = new ArrayList();
         for (OrderDto.RequestItemDto item : items) {
             Item findItem = itemRepository.findById(item.getId()).orElseThrow(
                     () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
@@ -36,13 +37,19 @@ public class OrderService {
 
             // 2. OrderItem 만들기
             OrderItems orderItems = OrderItems.createOrderItems(findItem, item.getCount());
-            orderItemsRepository.saveAndFlush(orderItems);
-
+            OrderItems saveOrderItem = orderItemsRepository.saveAndFlush(orderItems);
+            orderItemIds.add(saveOrderItem.getId());
         }
 
-        List<OrderItems> orderItems = orderItemsRepository.findAll();
+        // 3. OrderItem 가져오기
+        List<OrderItems> orderItems = new ArrayList<>();
 
-        // 3. Order 테이블에 저장하기
+        for (Long orderItemId : orderItemIds) {
+            Optional<OrderItems> findOrderItem = orderItemsRepository.findById(orderItemId);
+            orderItems.add(findOrderItem.get());
+        }
+
+        // 4. Order 테이블에 저장하기
         Order order = Order.createOrder(member, orderItems);
         orderRepository.saveAndFlush(order);
     }
