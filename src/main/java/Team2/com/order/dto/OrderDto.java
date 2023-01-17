@@ -1,6 +1,5 @@
 package Team2.com.order.dto;
 
-import Team2.com.item.entity.Item;
 import Team2.com.orderItem.dto.OrderItemsDto;
 import Team2.com.orderItem.entity.OrderItems;
 import lombok.AllArgsConstructor;

@@ -60,8 +60,8 @@ public class MemberController {
     @GetMapping("/sellers")
     public ResponseEntity<List<SellersResponseDto>> getSellerList(@RequestParam(defaultValue = "0") String sellerId){
         List<SellersResponseDto> sellerLists;
-        if(sellerId == "0"){
-            sellerLists = memberService.getSellerLists();
+        if(sellerId.equals("0")){
+            sellerLists =  memberService.getSellerLists();
         }else{
             sellerLists = memberService.getSellerOne(sellerId);
         }

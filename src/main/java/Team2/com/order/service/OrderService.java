@@ -3,7 +3,6 @@ package Team2.com.order.service;
 import Team2.com.item.entity.Item;
 import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
-import Team2.com.member.repository.MemberRepository;
 import Team2.com.order.dto.OrderDto;
 import Team2.com.order.entity.Order;
 import Team2.com.order.repository.OrderRepository;
@@ -16,10 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
