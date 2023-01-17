@@ -66,8 +66,9 @@ public class MemberController {
             sellerLists = memberService.getSellerOne(sellerId);
         }
         return new ResponseEntity(sellerLists, HttpStatus.OK);
-
     }
+
+
     @PostMapping("/apply")
     public HttpStatus apply(@RequestBody ApplyRequestDto applyRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetailsimpl){
         memberService.apply(applyRequestDto, userDetailsimpl.getMember());

@@ -41,15 +41,26 @@ public class AdminServiceImpl implements AdminService{
     @Transactional
     public void addRoles(Long id) {
         Request request = requestRepository.findById(id).get();
-        Member member = memberRepository.findById(request.getId()).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER));
-        member.changeRole(MemberRoleEnum.SELLER);
+
+        if(request.getStatus().equals("UP")) {
+            Member member = memberRepository.findById(request.getId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+            member.changeRole(MemberRoleEnum.SELLER);
+            memberRepository.save(member);
+        }else{
+            Member member = memberRepository.findById(request.getId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+            member.changeRole(MemberRoleEnum.CUSTOMER);
+            memberRepository.save(member);
+        }
+
         requestRepository.delete(request);
     }
 
     @Override
     public void deleteRoles(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER));
+        Request request = requestRepository.findById(id).get();
+        Member member = memberRepository.findById(request.getId()).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER));
         member.changeRole(MemberRoleEnum.CUSTOMER);
+        requestRepository.delete(request);
     }
 
     @Override
@@ -57,4 +68,5 @@ public class AdminServiceImpl implements AdminService{
         List<Request> all = requestRepository.findAll();
         return all;
     }
+
 }

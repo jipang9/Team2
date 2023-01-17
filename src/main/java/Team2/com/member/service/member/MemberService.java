@@ -88,17 +88,28 @@ public class MemberService {
         return memberRepository.findAllBySellers();
     }
 
+
     public void apply(ApplyRequestDto applyRequestDto, Member member) {
-        if(applyRequestDto.getStatus().equals("UP")) {
-            Request request = new Request(member.getId(), member.getRole().toString(), applyRequestDto.getStatus());
-            requestRepository.save(request);
-        }else if(applyRequestDto.getStatus().equals("DOWN")){
-            Request request = new Request(member.getId(), member.getRole().toString(), applyRequestDto.getStatus());
-            requestRepository.save(request);
-        }else{
-            throw new IllegalStateException("등록 에러 발생");
+        Optional<Request> check = requestRepository.findByMember(member.getId());
+        if(check.isEmpty()==true) { // 해당 사용자가 이미 등록을 했는지 안했는지 확인
+            if(applyRequestDto.getStatus().equals("UP")) {
+                if(member.getRole().equals("SELLER")) {
+                    Request request = new Request(member.getId(), member.getRole().toString(), Status.UP.toString());
+                    requestRepository.save(request);
+                }else{
+                    throw new CustomException(ERROR_DATA_BY_ROLE);
+                }
+            }else if(applyRequestDto.getStatus().equals("DOWN")){
+                Request request = new Request(member.getId(), member.getRole().toString(),Status.DOWN.toString());
+                requestRepository.save(request);
+            }else{
+                throw new CustomException(ERROR_DATA_BY_ROLE); //
+            }
         }
+        else
+            throw new CustomException(MEMBER_Already_REQUEST); // 이미 요청 했음
     }
+
     public List<SellersResponseDto> getSellerOne(String sellerId) {
         return memberRepository.findBySellerId(Long.valueOf(sellerId));
     }
