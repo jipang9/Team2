@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemsRepository orderItemsRepository;
