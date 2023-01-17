@@ -57,7 +57,8 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public List<OrderDto.Response> getOrders(){
-        return orderService.getOrders();
+    public ResponseEntity<List<OrderDto.Result>> getOrders(@RequestParam int offset, @RequestParam int limit){
+        OrderDto.Result orders = orderService.getOrders(offset, limit);
+        return new ResponseEntity(orders, HttpStatus.OK);
     }
 }

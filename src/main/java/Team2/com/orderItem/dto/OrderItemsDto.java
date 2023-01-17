@@ -12,14 +12,10 @@ public class OrderItemsDto {
     public static class Response{
         private Long id;
         private String itemName;
-        private int price;
-        private int count;
 
-        public Response(Long id, String itemName, int price, int count) {
+        public Response(Long id, String itemName) {
             this.id = id;
             this.itemName = itemName;
-            this.price = price;
-            this.count = count;
         }
     }
 

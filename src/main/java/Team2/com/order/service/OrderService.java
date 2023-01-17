@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,16 +55,15 @@ public class OrderService {
         orderRepository.saveAndFlush(order);
     }
 
-    public List<OrderDto.Response> getOrders() {
-        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.ASC, "id"));
+    public OrderDto.Result getOrders(int offset, int limit) {
+        PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
         Page<Order> page = orderRepository.findAll(pageRequest);
         Page<OrderDto.Response> map = page.map(order -> new OrderDto.Response(order.getId(), order.getMember().getUsername(), order.getOrderItems()));
-        List<OrderDto.Response> content = map.getContent();
+        List<OrderDto.Response> content = map.getContent(); // Order 배열
+        long totalCount = map.getTotalElements(); // Order 전체 개수
 
-        // List<OrderDto.ResponseOrderDto> collect = page.stream()
-        //         .map(v -> new OrderDto.ResponseOrderDto(v.getId(), v.getMember().getUsername(), v.getOrderItems()))
-        //         .collect(Collectors.toList());
+        OrderDto.Result result = new OrderDto.Result(offset, totalCount, content);
 
-        return content;
+        return result;
     }
 }
