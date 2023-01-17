@@ -70,22 +70,27 @@ public class OrderService {
 
     //(판매자) 주문내역 전체 조회
     @Transactional
-    public List<OrderDto.Response> getAllCustomerBuyList(PageRequest pageRequest, String sellerName) {
+    public OrderDto.Result getAllCustomerBuyList(int offset, int limite, String sellerName) {
 
+        PageRequest pageRequest = PageRequest.of(offset, limite, Sort.by(Sort.Direction.ASC, "id"));
         Page<Order> page = orderRepository.findAll(pageRequest);
         List<OrderDto.Response> resultList = new ArrayList<>();
 
         Iterator<Order> keys = page.iterator();
-        while( keys.hasNext() ){
+        while( keys.hasNext() ) {
             Order key = keys.next();
 
-            for(int i=0; i<key.getOrderItems().size(); i++){
-                if(sellerName.equals(key.getOrderItems().get(i).getItem().getMember().getUsername())){
+            for (int i = 0; i < key.getOrderItems().size(); i++) {
+                if (sellerName.equals(key.getOrderItems().get(i).getItem().getMember().getUsername())) {
                     resultList.add(new OrderDto.Response(key.getId(), key.getMember().getUsername(), key.getOrderItems()));
                 }
             }
         }
-        return resultList;
+        Long totalCount = (long)resultList.size();
+
+        OrderDto.Result result = new OrderDto.Result(offset, totalCount, resultList);
+
+        return result;
     }
 
     //(판매자)주문 내역 조회

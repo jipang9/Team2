@@ -1,13 +1,14 @@
 package Team2.com.item.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class ItemDto {
 
     @Getter
-    @NoArgsConstructor
-    public static class RequestItemDto{
+    @NoArgsConstructor(force = true)
+    public static class Request{
 
         private String itemName;
 
@@ -17,7 +18,7 @@ public class ItemDto {
 
         private int count;
 
-        public RequestItemDto(String itemName, String content, int price, int count){
+        public Request(String itemName, String content, int price, int count){
             this.itemName = itemName;
             this.content = content;
             this.price = price;
@@ -27,7 +28,7 @@ public class ItemDto {
 
     @Getter
     @NoArgsConstructor
-    public static class ResponseItemDto{
+    public static class Response{
 
         private String itemName;
 
@@ -39,7 +40,7 @@ public class ItemDto {
 
         private String sellerName;
 
-        public ResponseItemDto(String itemName, String content, int price, int count, String sellerName){
+        public Response(String itemName, String content, int price, int count, String sellerName){
             this.itemName = itemName;
             this.content = content;
             this.price = price;
@@ -47,4 +48,13 @@ public class ItemDto {
             this.sellerName = sellerName;
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Result<T>{
+        private int currentPage;
+        private Long count;
+        private T data;
+    }
+
 }
