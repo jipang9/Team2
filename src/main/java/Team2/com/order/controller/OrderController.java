@@ -12,6 +12,8 @@ import Team2.com.orderItem.entity.OrderItems;
 import Team2.com.security.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +38,7 @@ public class OrderController {
     private static final Item item3 = new Item("신발", "신는거", seller, 60000, 100);
 
     @PostMapping("/orders")
-    public void createOrder(@RequestBody OrderDto.Request requestOrderDto, HttpServletRequest request){
+    public ResponseEntity createOrder(@RequestBody OrderDto.Request requestOrderDto, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         Claims claims;
         if(token != null){
@@ -49,7 +51,9 @@ public class OrderController {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
             orderService.order(requestOrderDto.getItems(), member);
+            return new ResponseEntity("주문이 완료되었습니다.", HttpStatus.OK);
         }
+        return new ResponseEntity("주문을 실패했습니다.", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/orders")
