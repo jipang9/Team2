@@ -2,7 +2,9 @@ package Team2.com.order.controller;
 
 
 import Team2.com.item.entity.Item;
+import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
+import Team2.com.member.repository.MemberRepository;
 import Team2.com.order.dto.OrderDto;
 import Team2.com.order.service.OrderService;
 import Team2.com.member.entity.MemberRoleEnum;
@@ -10,6 +12,12 @@ import Team2.com.orderItem.entity.OrderItems;
 import Team2.com.security.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +30,6 @@ import java.util.Optional;
 @RequestMapping("/api/customer")
 public class OrderController {
     private final OrderService orderService;
-    private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
@@ -65,7 +72,7 @@ public class OrderController {
     public ResponseEntity getAllCustomerBuyList(@RequestParam("page") Integer page, @AuthenticationPrincipal UserDetails userDetails){
         PageRequest pageRequest = PageRequest.of(page,10);
 
-        List<OrderDto.ResponseOrderDto> orderAllList = orderService.getAllCustomerBuyList(pageRequest, userDetails.getUsername());
+        List<OrderDto.Response> orderAllList = orderService.getAllCustomerBuyList(pageRequest, userDetails.getUsername());
 
         if(orderAllList.isEmpty()){
             return new ResponseEntity("주문 내역이 존재 하지않습니다.", HttpStatus.OK);
@@ -77,7 +84,7 @@ public class OrderController {
     @GetMapping("/seller/order/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public ResponseEntity getCustomerBuyItem(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetails userDetails){
-        OrderDto.ResponseOrderDto orderDto = orderService.getCustomerBuyItem(orderId, userDetails.getUsername());
+        OrderDto.Response orderDto = orderService.getCustomerBuyItem(orderId, userDetails.getUsername());
         return new ResponseEntity(orderDto, HttpStatus.OK);
     }
 

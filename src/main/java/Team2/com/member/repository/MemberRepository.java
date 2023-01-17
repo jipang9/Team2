@@ -3,6 +3,7 @@ package Team2.com.member.repository;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.entity.Member;
 import Team2.com.member.dto.admin.MembersResponseDto;
+import Team2.com.member.entity.MemberRoleEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -28,17 +28,20 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItems> orderItems = new ArrayList<>();
 
-    public void setMember(Member member){
     @Column(nullable = false)
     private boolean orderStatus = false;
+
+    public void setMember(Member member){
+        this.member=member;
+    }
 
     public Order(Member member, OrderItems... orderItemList) {
         this.member = member;
         for (OrderItems orderItem : orderItemList) {
             addOrderItems(orderItem);
-
         }
     }
+
 
     public void addOrderItems(OrderItems orderItems){
         this.orderItems.add(orderItems);
