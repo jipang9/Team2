@@ -4,27 +4,35 @@ import Team2.com.item.entity.Item;
 import Team2.com.orderItem.dto.OrderItemsDto;
 import Team2.com.orderItem.entity.OrderItems;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class OrderDto {
 
     @Getter
-    public static class RequestOrderDto{
-        private List<OrderItemDto>
-        // private Item item;
-        // private
+    public static class Request{
+        private List<RequestItemDto> items;
     }
 
     @Getter
-    public static class ResponseOrderDto{
+    @ToString(of = {"id", "count"})
+    public static class RequestItemDto{
+        private Long id;
+        private int count;
+    }
+
+
+    @Getter
+    public static class Response{
         private Long id;
         private String username;
         private List<OrderItemsDto.Response> orderItemsList = new ArrayList<>();
 
 
-        public ResponseOrderDto(Long id, String username, List<OrderItems> orderItems) {
+        public Response(Long id, String username, List<OrderItems> orderItems) {
             this.id = id;
             this.username = username;
             for (OrderItems o : orderItems) {
