@@ -3,6 +3,7 @@ package Team2.com.member.repository;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.entity.Member;
 import Team2.com.member.dto.admin.MembersResponseDto;
+import Team2.com.member.entity.MemberRoleEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,5 +20,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m where m.role='SELLER'")
     List<SellersResponseDto> findAllBySellers();
+
+    //sein 추가 작성 -> 특정 seller만 검색해 올 수 있도록
+    Optional<Member> findByUsernameAndAndRole(String username, MemberRoleEnum roleEnum);
 
 }

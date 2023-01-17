@@ -2,9 +2,6 @@ package Team2.com.security.jwt;
 
 import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.security.details.UserDetailsServiceImpl;
-
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;

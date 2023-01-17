@@ -14,9 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +34,7 @@ public class OrderService {
         itemRepository.saveAndFlush(item1);
         itemRepository.saveAndFlush(item2);
         itemRepository.saveAndFlush(item3);
+
 
         OrderItems orderItems1 = new OrderItems(item1, 3);
         OrderItems orderItems2 = new OrderItems(item2, 2);
@@ -64,4 +65,52 @@ public class OrderService {
 
         return content;
     }
+
+    //(판매자) 주문내역 전체 조회
+    public List<OrderDto.ResponseOrderDto> getAllCustomerBuyList(PageRequest pageRequest, String sellerName) {
+
+        //판매자의 주문내역 조회
+        Page<Order> page = orderRepository.findAll(pageRequest);
+
+        Page<String> sellerList = page.map(order -> order.getOrderItems().get(0).getMember().getUsername());
+
+
+        return ;
+    }
+
+    
+    //(판매자)주문 내역 조회
+    @Transactional(readOnly = true)
+    public OrderDto.ResponseOrderDto getCustomerBuyItem(Long orderId, String sellerName) {
+
+        //주문조회
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new IllegalArgumentException("주문내역이 존재하지 않습니다."));
+
+        //판매자 상품이 맞는지 확인
+        for(int i=0; i<order.getOrderItems().size(); i++){
+            if(!order.getOrderItems().get(0).getItem().getMember().getUsername().equals(sellerName)){
+                throw new IllegalArgumentException("판매자의 상품과 일치하지 않습니다.");
+            }
+        }
+        return new OrderDto.ResponseOrderDto(order.getId(), order.getMember().getUsername(), order.getOrderItems());
+    }
+
+    //(판매자)주문완료처리
+    @Transactional
+    public void orderCompleteProceeding(Long orderId, String sellerName) {
+
+        //주문조회
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new IllegalArgumentException("주문내역이 존재하지 않습니다."));
+
+        //판매자 상품이 맞는지 확인
+        for(int i=0; i<order.getOrderItems().size(); i++){
+            if(!order.getOrderItems().get(0).getItem().getMember().getUsername().equals(sellerName)){
+                throw new IllegalArgumentException("판매자의 상품과 일치하지 않습니다.");
+            }
+        }
+        //주문상태 변경
+        order.updateOrderStatus();
+    }
+
+
 }
