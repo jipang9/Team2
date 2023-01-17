@@ -114,5 +114,6 @@ public class MemberService {
         return memberRepository.findBySellerId(Long.valueOf(sellerId));
     }
 
+    // 문제있나?
 
 }
