@@ -56,11 +56,7 @@ public class MemberController {
 
     @GetMapping("/sellers")
     public ResponseEntity<List<SellersResponseDto>> getSellerList(){
-        // List<SellersResponseDto> sellerList = memberService.getSellerList();/
-        // if(sellerList.size() == 0){
-        //     return new ResponseEntity("판매자가 존재하지 않습니다.", HttpStatus.OK);
-        // }
-        // return new ResponseEntity(sellerList, HttpStatus.OK);
-        return null;
+        List<SellersResponseDto> sellerLists = memberService.getSellerLists();
+        return new ResponseEntity(sellerLists, HttpStatus.OK);
     }
 }
