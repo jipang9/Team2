@@ -20,4 +20,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m where m.role='SELLER'")
     List<SellersResponseDto> findAllBySellers();
+
+
+    @Query("select m from Member m where m.id=:id and m.role='SELLER'")
+    List<SellersResponseDto> findBySellerId(@Param("id") Long sellerId);
 }

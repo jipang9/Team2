@@ -111,4 +111,7 @@ public class MemberService {
     }
 
 
+    public List<SellersResponseDto> getSellerOne(String sellerId) {
+        return memberRepository.findBySellerId(Long.valueOf(sellerId));
+    }
 }

@@ -24,14 +24,8 @@ public class OrderController {
     private static final Item item3 = new Item("신발", "신는거", seller, 60000, 100);
 
     @PostMapping("/orders")
-    public void createOrder(){
-        // memberRepository.save(seller);
-        // memberRepository.save(customer);
-
-        // itemRepository.save(item1);
-        // itemRepository.save(item2);
-        // itemRepository.save(item3);
-        orderService.createOrder(seller, customer, item1, item2, item3);
+    public void createOrder(@RequestBody OrderDto.RequestOrderDto requestOrderDto){
+        orderService.createOrder();
     }
 
     @GetMapping("/orders")

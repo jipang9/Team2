@@ -27,13 +27,12 @@ public class OrderService {
     private final OrderItemsRepository orderItemsRepository;
     private final ItemRepository itemRepository;
 
-    public void createOrder(Member seller, Member customer, Item item1, Item item2, Item item3) {
-        memberRepository.saveAndFlush(seller);
-        memberRepository.saveAndFlush(customer);
+    public void createOrder() {
+        // 1. 주문할 상품 불러오기
 
-        itemRepository.saveAndFlush(item1);
-        itemRepository.saveAndFlush(item2);
-        itemRepository.saveAndFlush(item3);
+        // 2. OrderItem 만들기
+
+        // 3. Order 만들어서 저장하기
 
         OrderItems orderItems1 = new OrderItems(item1, 3);
         OrderItems orderItems2 = new OrderItems(item2, 2);

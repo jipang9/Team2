@@ -12,6 +12,7 @@ public class OrderDto {
 
     @Getter
     public static class RequestOrderDto{
+        private List<OrderItemDto>
         // private Item item;
         // private
     }
@@ -20,14 +21,14 @@ public class OrderDto {
     public static class ResponseOrderDto{
         private Long id;
         private String username;
-        private List<OrderItemsDto> orderItemsList = new ArrayList<>();
+        private List<OrderItemsDto.Response> orderItemsList = new ArrayList<>();
 
 
         public ResponseOrderDto(Long id, String username, List<OrderItems> orderItems) {
             this.id = id;
             this.username = username;
             for (OrderItems o : orderItems) {
-                OrderItemsDto orderItemsDto = new OrderItemsDto(o.getId(), o.getItem().getName(), o.getItem().getPrice(), o.getItem().getCount());
+                OrderItemsDto.Response orderItemsDto = new OrderItemsDto.Response(o.getId(), o.getItem().getName(), o.getItem().getPrice(), o.getItem().getCount());
                 orderItemsList.add(orderItemsDto);
             }
         }
