@@ -22,7 +22,7 @@ public class ItemController {
 
     //모든 제품 조회
     @GetMapping("/products")
-    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity getItemAllList(@RequestParam int offset, @RequestParam int limit){
         ResultResponseDto itemAllList = itemService.getItemAllList(offset, limit);
         return new ResponseEntity(itemAllList, HttpStatus.OK);
@@ -30,7 +30,7 @@ public class ItemController {
 
     //하나의 제품 조회
     @GetMapping("/product/{id}")
-    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity getItem(@PathVariable("id") Long itemId){
         ItemResponseDto item = itemService.getItem(itemId);
         return new ResponseEntity(item, HttpStatus.OK);

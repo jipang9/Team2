@@ -63,7 +63,11 @@ public class ItemServiceImpl implements ItemService{
         Member member = memberRepository.findByUsernameAndAndRole(sellerName, MemberRoleEnum.SELLER).orElseThrow(()-> new CustomException(NOT_FOUND_SELLER));
 
         //2-1. 기존에 등록된 상품인지 체크
-        itemRepository.findByName(requestItemDto.getItemName()).orElseThrow(()-> new CustomException(DUPLICATED_ITEM));
+        Item checkItem = itemRepository.findByName(requestItemDto.getItemName());
+
+        if(checkItem!=null){
+            throw new CustomException(DUPLICATED_ITEM);
+        }
 
         //2-2. 상품 등록
         Item additem = itemRepository.saveAndFlush(new Item(requestItemDto.getItemName(), requestItemDto.getContent(), member, requestItemDto.getPrice(), requestItemDto.getCount()));

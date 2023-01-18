@@ -4,14 +4,13 @@ import Team2.com.order.dto.OrderRequestDto;
 import Team2.com.order.dto.OrderResponseDto;
 import Team2.com.order.dto.OrderResultDto;
 import Team2.com.order.service.OrderService;
+import Team2.com.order.service.OrderServiceImpl;
 import Team2.com.security.details.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class OrderController {
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
     @PostMapping("/customer/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity createOrder(@RequestBody OrderRequestDto requestOrderDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
