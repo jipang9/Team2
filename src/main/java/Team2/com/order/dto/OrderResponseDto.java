@@ -10,15 +10,13 @@ import java.util.List;
 @Getter
 public class OrderResponseDto {
     private Long id;
-    private String username;
     private List<OrderItemsResponseDto> orderItemsList = new ArrayList<>();
 
 
-    public OrderResponseDto(Long id, String username, List<OrderItems> orderItems) {
+    public OrderResponseDto(Long id, List<OrderItems> orderItems) {
         this.id = id;
-        this.username = username;
         for (OrderItems o : orderItems) {
-            OrderItemsResponseDto orderItemsDto = new OrderItemsResponseDto(o.getId(), o.getItem().getName());
+            OrderItemsResponseDto orderItemsDto = new OrderItemsResponseDto(o.getItem().getId(), o.getItem().getName());
             orderItemsList.add(orderItemsDto);
         }
     }

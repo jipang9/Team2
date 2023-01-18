@@ -22,7 +22,7 @@ public enum ErrorCode {
     NOT_MATCH_INFORMATION(HttpStatus.BAD_REQUEST, "회원정보가 일치하지 않습니다."),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "username과 password의 형식이 올바르지 않습니다."),
     INVALID_ITEM_COUNT(HttpStatus.BAD_REQUEST, "재고보다 많은 수량을 입력하였습니다."),
-    INVALID_SELLER_ITEM(HttpStatus.BAD_REQUEST, "판매자가 일치하지 않습니다."),
+    INVALID_ORDER_COUNT(HttpStatus.BAD_REQUEST, "주문 수량은 1개 이상이어야 합니다."),
 
     // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
     DUPLICATED_USERNAME(HttpStatus.CONFLICT, "중복된 username 입니다"),
@@ -34,8 +34,10 @@ public enum ErrorCode {
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다."),
     NOT_FOUND_SELLER(HttpStatus.BAD_REQUEST, "판매자 정보를 찾을 수 없습니다."),
     NOT_FOUND_ITEM(HttpStatus.BAD_REQUEST, "상품 정보를 찾을 수 없습니다."),
+    NOT_EXIST_CATEGORY(HttpStatus.BAD_REQUEST, "카테고리가 존재하지 않습니다."),
+    NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다."),
     UNABLE_TO_FULLFILL_REQUEST(HttpStatus.BAD_REQUEST, " 요청을 수행할 수 없습니다"),
-    NOT_FOUND_ORDERNUMBER(HttpStatus.BAD_REQUEST,"주문정보를 찾을 수 없습니다."),
+    NOT_FOUND_ORDERNUMBER(HttpStatus.BAD_REQUEST, "존재하지 않는 주문번호 입니다."),
 
     // 401 -> 잘못된 인증 및 인가 정보
     ERROR_DATA_BY_ROLE(HttpStatus.UNAUTHORIZED, "잘못된 권한 요청 정보입니다. 다시 확인해주세요"),
