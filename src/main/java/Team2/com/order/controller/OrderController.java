@@ -1,16 +1,10 @@
 package Team2.com.order.controller;
 
-
-import Team2.com.item.entity.Item;
-import Team2.com.item.repository.ItemRepository;
-import Team2.com.member.entity.Member;
-import Team2.com.member.repository.MemberRepository;
-import Team2.com.order.dto.OrderDto;
+import Team2.com.order.dto.OrderRequestDto;
+import Team2.com.order.dto.OrderResponseDto;
+import Team2.com.order.dto.OrderResultDto;
 import Team2.com.order.service.OrderService;
-import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.security.details.UserDetailsImpl;
-import Team2.com.security.jwt.JwtUtil;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -20,7 +14,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -28,42 +21,26 @@ import java.util.List;
 @RequestMapping("/api")
 public class OrderController {
     private final OrderService orderService;
-    private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
-
     @PostMapping("/customer/orders")
-    public ResponseEntity createOrder(@RequestBody OrderDto.Request requestOrderDto, HttpServletRequest request){
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-        if(token != null){
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new IllegalArgumentException("Token Error");
-            }
-            Member member = memberRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-            );
-            orderService.order(requestOrderDto.getItems(), member);
-            return new ResponseEntity("주문이 완료되었습니다.", HttpStatus.OK);
-        }
-        return new ResponseEntity("주문을 실패했습니다.", HttpStatus.BAD_REQUEST);
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
+    public ResponseEntity createOrder(@RequestBody OrderRequestDto requestOrderDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        orderService.order(requestOrderDto.getItems(), userDetails.getMember());
+        return new ResponseEntity("주문이 완료되었습니다.", HttpStatus.OK);
+
     }
 
     @GetMapping("/customer/orders")
-    public ResponseEntity<List<OrderDto.Result>> getOrders(@RequestParam int offset, @RequestParam int limit){
-        OrderDto.Result orders = orderService.getOrders(offset, limit);
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
+    public ResponseEntity<List<OrderResultDto>> getOrders(@RequestParam int offset, @RequestParam int limit){
+        OrderResultDto orders = orderService.getOrders(offset, limit);
         return new ResponseEntity(orders, HttpStatus.OK);
     }
-
 
     //나(판매자)의 모든 주문 목록 list 조회
     @GetMapping("/seller/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public ResponseEntity getAllCustomerBuyList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetailsImpl userDetails){
-
-        OrderDto.Result orderAllList = orderService.getAllCustomerBuyList(offset, limit, userDetails.getUsername());
-
+        OrderResultDto orderAllList = orderService.getAllCustomerBuyList(offset, limit, userDetails.getUsername());
         return new ResponseEntity(orderAllList, HttpStatus.OK);
     }
 
@@ -71,7 +48,7 @@ public class OrderController {
     @GetMapping("/seller/order/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public ResponseEntity getCustomerBuyItem(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        OrderDto.Response orderDto = orderService.getCustomerBuyItem(orderId, userDetails.getUsername());
+        OrderResponseDto orderDto = orderService.getCustomerBuyItem(orderId, userDetails.getUsername());
         return new ResponseEntity(orderDto, HttpStatus.OK);
     }
 
