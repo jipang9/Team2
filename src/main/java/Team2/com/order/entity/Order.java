@@ -29,7 +29,7 @@ public class Order {
     private List<OrderItems> orderItems = new ArrayList<>();
 
     @Column(nullable = false)
-    private boolean orderStatus = false;
+    private String orderStatus = "N";
 
     public void setMember(Member member){
         this.member=member;
@@ -60,6 +60,6 @@ public class Order {
     }
 
     public void updateOrderStatus(){
-        this.orderStatus = true;
+        this.orderStatus = "Y";
     }
 }

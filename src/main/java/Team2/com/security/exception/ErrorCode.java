@@ -13,16 +13,13 @@ public enum ErrorCode {
     // 500 -> INTERNAL SERVER ERROR : 서버에러
 
 
-
-
-
-
-
     // 400 ->  BAD _ REQUEST : 잘못된 요청 (ex. 파라미터 값을 확인해주세요 )
     NOT_MATCH_INFORMATION(HttpStatus.BAD_REQUEST, "회원정보가 일치하지 않습니다."),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "username과 password의 형식이 올바르지 않습니다."),
     INVALID_ITEM_COUNT(HttpStatus.BAD_REQUEST, "재고보다 많은 수량을 입력하였습니다."),
     INVALID_ORDER_COUNT(HttpStatus.BAD_REQUEST, "주문 수량은 1개 이상이어야 합니다."),
+    INVALID_SELLER_ITEM(HttpStatus.BAD_REQUEST, "판매자가 일치하지 않습니다"),
+    INVALID_ITEM_STATUS(HttpStatus.BAD_REQUEST, "현재 주문된 상품이기에 수정/삭제가 불가합니다."),
 
     // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
     DUPLICATED_USERNAME(HttpStatus.CONFLICT, "중복된 username 입니다"),
@@ -32,7 +29,7 @@ public enum ErrorCode {
 
     // 404 ->  NOT _ FOUND : 잘못된 리소스 접근 (ex. 존재하지 않는 값)
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다."),
-    NOT_FOUND_SELLER(HttpStatus.BAD_REQUEST, "판매자 정보를 찾을 수 없습니다."),
+    NOT_FOUND_SELLER(HttpStatus.BAD_REQUEST, "판매자가 일치하지 않습니다."),
     NOT_FOUND_ITEM(HttpStatus.BAD_REQUEST, "상품 정보를 찾을 수 없습니다."),
     NOT_EXIST_CATEGORY(HttpStatus.BAD_REQUEST, "카테고리가 존재하지 않습니다."),
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다."),
@@ -44,6 +41,7 @@ public enum ErrorCode {
     AUTHORIZATION(HttpStatus.UNAUTHORIZED, "작성자만 수정/삭제할 수 있습니다."),
     INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다.");
+    
 
     private final HttpStatus httpStatus;
     private final String message;
