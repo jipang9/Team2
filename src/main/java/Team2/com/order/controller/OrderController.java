@@ -33,8 +33,8 @@ public class OrderController {
     // 주문 목록 조회
     @GetMapping("/customer/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
-    public ResponseEntity<List<OrderResultDto>> getOrders(@RequestParam int offset, @RequestParam int limit){
-        OrderResultDto orders = orderService.getOrders(offset, limit);
+    public ResponseEntity<List<OrderResultDto>> getOrders(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        OrderResultDto orders = orderService.getOrders(offset, limit, userDetails.getMember());
         return new ResponseEntity(orders, HttpStatus.OK);
     }
 
