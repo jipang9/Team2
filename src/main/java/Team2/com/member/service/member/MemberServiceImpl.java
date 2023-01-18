@@ -59,6 +59,7 @@ public class MemberServiceImpl implements MemberService {
         if(memberRepository.findByUsername(username).isPresent())
             throw new CustomException(DUPLICATED_USERNAME);}
 
+
     @Transactional(readOnly = true)
     @Override
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
@@ -66,7 +67,6 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
             throw new CustomException(NOT_MATCH_INFORMATION);
         }
-
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getUsername(), member.getRole()));
     }
 
@@ -79,6 +79,7 @@ public class MemberServiceImpl implements MemberService {
     public List<SellersResponseDto> getSellerLists() {
         return memberRepository.findAllBySellers();
     }
+
 
     @Override
     public void apply(ApplyRequestDto applyRequestDto, Member member) {

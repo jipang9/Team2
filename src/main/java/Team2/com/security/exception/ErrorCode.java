@@ -12,12 +12,6 @@ public enum ErrorCode {
 
     // 500 -> INTERNAL SERVER ERROR : 서버에러
 
-
-
-
-
-
-
     // 400 ->  BAD _ REQUEST : 잘못된 요청 (ex. 파라미터 값을 확인해주세요 )
     NOT_MATCH_INFORMATION(HttpStatus.BAD_REQUEST, "회원정보가 일치하지 않습니다."),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "username과 password의 형식이 올바르지 않습니다."),
