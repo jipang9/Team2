@@ -26,26 +26,27 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    //내 프로필 조회
-    @GetMapping("/info")
-    public InfoDto myInfo(Authentication authentication){
-        InfoDto info = memberService.info(authentication);
-        return info;
+    @GetMapping("/info") //내 프로필 조회
+    public InfoResponseDto myInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return memberService.getMyInfo(userDetails.getMember());
     }
 
-    //회원가입 구현
-    @PostMapping("/signup")
+    @PostMapping("/signup") //회원가입 구현
     public ResponseEntity<MsgResponseDto> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
         memberService.signup(signupRequestDto);
         return ResponseEntity.ok(new MsgResponseDto("회원가입 완료", HttpStatus.OK.value()));
     }
 
-    //로그인 구현
-    @ResponseBody
-    @PostMapping("/login")
+    @PostMapping("/login") //로그인 구현
     public ResponseEntity<MsgResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         memberService.login(loginRequestDto, response);
         return ResponseEntity.ok(new MsgResponseDto("로그인 완료", HttpStatus.OK.value()));
+    }
+
+    @PostMapping("/apply") // 사용자 권한 요청
+    public HttpStatus apply(@RequestBody ApplyRequestDto applyRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetailsimpl) {
+        memberService.apply(applyRequestDto, userDetailsimpl.getMember());
+        return HttpStatus.OK;
     }
 
     @GetMapping("/sellers")
@@ -58,20 +59,5 @@ public class MemberController {
         }
         return new ResponseEntity(sellerLists, HttpStatus.OK);
     }
-
-
-    @PostMapping("/apply")
-    public HttpStatus apply(@RequestBody ApplyRequestDto applyRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetailsimpl) {
-        memberService.apply(applyRequestDto, userDetailsimpl.getMember());
-        return HttpStatus.OK;
-    }
-
-
-//    @GetMapping("/myinfo")
-//    public ResponseEntity<InfoResponseDto> getInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        InfoResponseDto result  = memberService.getMyInfo(userDetails.getMember());
-//        return ResponseEntity.status(200).body(result);
-//    }
-
 
 }

@@ -18,7 +18,8 @@ public enum ErrorCode {
     INVALID_ITEM_COUNT(HttpStatus.BAD_REQUEST, "재고보다 많은 수량을 입력하였습니다."),
 
     // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
-    DUPLICATED_USERNAME(HttpStatus.CONFLICT, "중복된 username 입니다"),
+    DUPLICATED_USERNAME(HttpStatus.CONFLICT, "이미 사용중인 아이디입니다. 다시 확인하세요 "),
+    DUPLICATED_PHONENUMBER(HttpStatus.CONFLICT, "이미 사용중인 휴대폰 번호 입니다. 다시 확인하세요 "),
 
     DUPLICATED_ITEM(HttpStatus.CONFLICT, "이미 존재하는 상품입니다"),
     MEMBER_Already_REQUEST(HttpStatus.CONFLICT, "이미 요청된 회원입니다."),

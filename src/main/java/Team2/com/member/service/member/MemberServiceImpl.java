@@ -1,11 +1,11 @@
 package Team2.com.member.service.member;
 
+import Team2.com.member.dto.InfoResponseDto;
 import Team2.com.member.dto.admin.MembersResponseDto;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.dto.member.ApplyRequestDto;
 import Team2.com.member.dto.member.LoginRequestDto;
 import Team2.com.member.dto.member.SignupRequestDto;
-import Team2.com.member.dto.member.InfoDto;
 import Team2.com.member.entity.Member;
 import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.entity.Request;
@@ -16,7 +16,6 @@ import Team2.com.security.exception.CustomException;
 import Team2.com.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,10 +39,11 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
-    @Transactional
     @Override
+    @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
-        checkByMemberDuplicated(signupRequestDto.getUsername()); // 사용자 중복 처리 부분
+        checkByMemberDuplicated(signupRequestDto.getEmail());
+        checkByMemberPhoneNumber(signupRequestDto.getPhoneNumber());
         MemberRoleEnum role = MemberRoleEnum.CUSTOMER;
         //이 부분 한번 고민해봤으면 좋겠음.
         if (signupRequestDto.isAdmin()) {
@@ -57,19 +57,24 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void checkByMemberDuplicated(String username) {
-        if(memberRepository.findByUsername(username).isPresent())
+    public void checkByMemberDuplicated(String email) {
+        if(memberRepository.existsByEmail(email))
             throw new CustomException(DUPLICATED_USERNAME);}
 
-
-    @Transactional(readOnly = true)
     @Override
+    public void checkByMemberPhoneNumber(String phoneNumber) {
+        if(memberRepository.existsByPhoneNumber(phoneNumber))
+            throw new CustomException(DUPLICATED_PHONENUMBER);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        Member member = memberRepository.findByUsername(loginRequestDto.getUsername()).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+        Member member = memberRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
             throw new CustomException(NOT_MATCH_INFORMATION);
         }
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getUsername(), member.getRole()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getEmail(), member.getRole()));
     }
 
     @Override
@@ -101,7 +106,9 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findBySellerId(Long.valueOf(sellerId));
     }
 
+
     @Override
+    @Transactional(readOnly = true)
     public void checkByRequest(Long id) {
         Optional<Request> check = requestRepository.findByMember(id);
         if (check.isEmpty() == true) {
@@ -110,21 +117,12 @@ public class MemberServiceImpl implements MemberService {
             throw new CustomException(MEMBER_Already_REQUEST);
     }
 
-
-//    @Override
-//    public InfoResponseDto getMyInfo(Member member) {
-//        InfoResponseDto info = new InfoResponseDto(member.getUsername(), member.getRole().toString());
-//        return info;
-//    }
-
     @Override
-    public InfoDto info(Authentication authentication){
-        String name = authentication.getName();
-        String authorities = authentication.getAuthorities().toString();
-
-        return new InfoDto(name, authorities);
+    @Transactional(readOnly = true)
+    public InfoResponseDto getMyInfo(Member member) {
+        InfoResponseDto info = new InfoResponseDto(member);
+        return info;
     }
-
 
 
 }

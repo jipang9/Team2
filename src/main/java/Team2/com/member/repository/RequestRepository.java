@@ -17,7 +17,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     @Query("select r from Request r where r.user=:id")
     Optional<Request> findByMember(@Param("id") Long id);
 
-
     List<Request> findAll();
 
 

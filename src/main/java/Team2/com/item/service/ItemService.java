@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface ItemService {
 
-    ResultResponseDto getItemAllList(int offset, int limit);
 
-    ItemResponseDto getItem(Long itemId);
+    ItemResponseDto addItem(ItemRequestDto requestItemDto, String sellerName); // 상품 등록
 
-    ItemResponseDto addItem(ItemRequestDto requestItemDto, String sellerName);
+    void modifyItem(Long itemId, ItemRequestDto requestItemDto, String sellerName); // 상품 수정
 
-    void modifyItem(Long itemId, ItemRequestDto requestItemDto, String sellerName);
+    void deleteItem(Long itemId, String sellerName); //상품 삭제
 
-    void deleteItem(Long itemId, String sellerName);
+    ResultResponseDto getItemAllList(int offset, int limit); // 상품 리스트 출력
+
+    ItemResponseDto getItem(Long itemId); // 상품 단일 조회 ->
 }

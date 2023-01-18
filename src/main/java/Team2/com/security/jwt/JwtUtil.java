@@ -60,9 +60,7 @@ public class JwtUtil {
 
     public String createToken(String username, MemberRoleEnum role) {
         Date date = new Date();
-
         return BEARER_PREFIX +
-
                 Jwts.builder()
                         .setSubject(username)
                         .claim(AUTHORIZATION_KEY, role)
