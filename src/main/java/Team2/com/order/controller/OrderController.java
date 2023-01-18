@@ -21,12 +21,12 @@ import java.util.List;
 @RequestMapping("/api")
 public class OrderController {
     private final OrderService orderService;
-
     @PostMapping("/customer/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity createOrder(@RequestBody OrderRequestDto requestOrderDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.order(requestOrderDto.getItems(), userDetails.getMember());
         return new ResponseEntity("주문이 완료되었습니다.", HttpStatus.OK);
+
     }
 
     @GetMapping("/customer/orders")
@@ -36,23 +36,18 @@ public class OrderController {
         return new ResponseEntity(orders, HttpStatus.OK);
     }
 
-
     //나(판매자)의 모든 주문 목록 list 조회
     @GetMapping("/seller/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getAllCustomerBuyList(@RequestParam("page") Integer page, @AuthenticationPrincipal UserDetails userDetails){
-        PageRequest pageRequest = PageRequest.of(page,10);
-        List<OrderResponseDto> orderAllList = orderService.getAllCustomerBuyList(pageRequest, userDetails.getUsername());
-        if(orderAllList.isEmpty()){
-            return new ResponseEntity("주문 내역이 존재 하지않습니다.", HttpStatus.OK);
-        }
+    public ResponseEntity getAllCustomerBuyList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        OrderResultDto orderAllList = orderService.getAllCustomerBuyList(offset, limit, userDetails.getUsername());
         return new ResponseEntity(orderAllList, HttpStatus.OK);
     }
 
     //주문번호로 주문 조회
     @GetMapping("/seller/order/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getCustomerBuyItem(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity getCustomerBuyItem(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         OrderResponseDto orderDto = orderService.getCustomerBuyItem(orderId, userDetails.getUsername());
         return new ResponseEntity(orderDto, HttpStatus.OK);
     }
@@ -60,7 +55,7 @@ public class OrderController {
     //판매자 주문 완료 처리
     @PutMapping("/seller/order/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity orderCompleteProceeding(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity orderCompleteProceeding(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.orderCompleteProceeding(orderId, userDetails.getUsername());
         return new ResponseEntity("주문처리가 완료되었습니다.", HttpStatus.OK);
     }
