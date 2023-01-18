@@ -3,8 +3,9 @@ package Team2.com.order.service;
 import Team2.com.item.entity.Item;
 import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
-import Team2.com.member.repository.MemberRepository;
-import Team2.com.order.dto.OrderDto;
+import Team2.com.order.dto.OrderRequestItemDto;
+import Team2.com.order.dto.OrderResponseDto;
+import Team2.com.order.dto.OrderResultDto;
 import Team2.com.order.entity.Order;
 import Team2.com.order.repository.OrderRepository;
 import Team2.com.orderItem.entity.OrderItems;
@@ -15,12 +16,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +29,10 @@ public class OrderService {
     private final OrderItemsRepository orderItemsRepository;
     private final ItemRepository itemRepository;
 
-    public void order(List<OrderDto.RequestItemDto> items, Member member) {
+    public void order(List<OrderRequestItemDto> items, Member member) {
         // 1. 주문할 Item 불러오기
         ArrayList<Long> orderItemIds = new ArrayList();
-        for (OrderDto.RequestItemDto item : items) {
+        for (OrderRequestItemDto item : items) {
             Item findItem = itemRepository.findById(item.getId()).orElseThrow(
                     () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
             );
@@ -56,24 +56,24 @@ public class OrderService {
         orderRepository.saveAndFlush(order);
     }
 
-    public OrderDto.Result getOrders(int offset, int limit) {
+    public OrderResultDto getOrders(int offset, int limit) {
         PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
         Page<Order> page = orderRepository.findAll(pageRequest);
-        Page<OrderDto.Response> map = page.map(order -> new OrderDto.Response(order.getId(), order.getMember().getUsername(), order.getOrderItems()));
-        List<OrderDto.Response> content = map.getContent(); // Order 배열
+        Page<OrderResponseDto> map = page.map(order -> new OrderResponseDto(order.getId(), order.getMember().getUsername(), order.getOrderItems()));
+        List<OrderResponseDto> content = map.getContent(); // Order 배열
         long totalCount = map.getTotalElements(); // Order 전체 개수
 
-        OrderDto.Result result = new OrderDto.Result(offset, totalCount, content);
+        OrderResultDto result = new OrderResultDto<>(offset, totalCount, content);
 
         return result;
     }
 
     //(판매자) 주문내역 전체 조회
     @Transactional
-    public List<OrderDto.Response> getAllCustomerBuyList(PageRequest pageRequest, String sellerName) {
+    public List<OrderResponseDto> getAllCustomerBuyList(PageRequest pageRequest, String sellerName) {
 
         Page<Order> page = orderRepository.findAll(pageRequest);
-        List<OrderDto.Response> resultList = new ArrayList<>();
+        List<OrderResponseDto> resultList = new ArrayList<>();
 
         Iterator<Order> keys = page.iterator();
         while( keys.hasNext() ){
@@ -81,7 +81,7 @@ public class OrderService {
 
             for(int i=0; i<key.getOrderItems().size(); i++){
                 if(sellerName.equals(key.getOrderItems().get(i).getItem().getMember().getUsername())){
-                    resultList.add(new OrderDto.Response(key.getId(), key.getMember().getUsername(), key.getOrderItems()));
+                    resultList.add(new OrderResponseDto(key.getId(), key.getMember().getUsername(), key.getOrderItems()));
                 }
             }
         }
@@ -90,7 +90,7 @@ public class OrderService {
 
     //(판매자)주문 내역 조회
     @Transactional(readOnly = true)
-    public OrderDto.Response getCustomerBuyItem(Long orderId, String sellerName) {
+    public OrderResponseDto getCustomerBuyItem(Long orderId, String sellerName) {
 
         //주문조회
         Order order = orderRepository.findById(orderId).orElseThrow(()-> new IllegalArgumentException("주문내역이 존재하지 않습니다."));
@@ -101,7 +101,7 @@ public class OrderService {
                 throw new IllegalArgumentException("판매자의 상품과 일치하지 않습니다.");
             }
         }
-        return new OrderDto.Response(order.getId(), order.getMember().getUsername(), order.getOrderItems());
+        return new OrderResponseDto(order.getId(), order.getMember().getUsername(), order.getOrderItems());
     }
 
     //(판매자)주문완료처리
