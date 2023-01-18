@@ -3,13 +3,13 @@ package Team2.com.member.service.member;
 import Team2.com.member.dto.admin.MembersResponseDto;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.dto.member.ApplyRequestDto;
+import Team2.com.member.dto.member.LoginRequestDto;
+import Team2.com.member.dto.member.SignupRequestDto;
 import Team2.com.member.entity.Member;
+import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.entity.Request;
 import Team2.com.member.entity.Status;
 import Team2.com.member.repository.MemberRepository;
-import Team2.com.member.entity.MemberRoleEnum;
-import Team2.com.member.dto.member.LoginRequestDto;
-import Team2.com.member.dto.member.SignupRequestDto;
 import Team2.com.member.repository.RequestRepository;
 import Team2.com.security.exception.CustomException;
 import Team2.com.security.jwt.JwtUtil;
@@ -19,10 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+
 import static Team2.com.security.exception.ErrorCode.*;
 
 @Service
@@ -39,10 +40,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public void signup(@Valid SignupRequestDto signupRequestDto) {
+    public void signup(SignupRequestDto signupRequestDto) {
         checkByMemberDuplicated(signupRequestDto.getUsername()); // 사용자 중복 처리 부분
         MemberRoleEnum role = MemberRoleEnum.CUSTOMER;
-
         //이 부분 한번 고민해봤으면 좋겠음.
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
@@ -50,7 +50,6 @@ public class MemberServiceImpl implements MemberService {
             }
             role = MemberRoleEnum.ADMIN;
         }
-
         Member member = signupRequestDto.toEntity(passwordEncoder.encode(signupRequestDto.getPassword()), role);
         memberRepository.save(member);
     }
@@ -58,8 +57,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void checkByMemberDuplicated(String username) {
         if(memberRepository.findByUsername(username).isPresent())
-            throw new CustomException(DUPLICATED_USERNAME);
-    }
+            throw new CustomException(DUPLICATED_USERNAME);}
 
     @Transactional(readOnly = true)
     @Override
@@ -68,6 +66,7 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
             throw new CustomException(NOT_MATCH_INFORMATION);
         }
+
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(member.getUsername(), member.getRole()));
     }
 
@@ -108,5 +107,10 @@ public class MemberServiceImpl implements MemberService {
             throw new CustomException(MEMBER_Already_REQUEST);
     }
 
+//    @Override
+//    public InfoResponseDto getMyInfo(Member member) {
+//        InfoResponseDto info = new InfoResponseDto(member.getUsername(), member.getRole().toString());
+//        return info;
+//    }
 
 }

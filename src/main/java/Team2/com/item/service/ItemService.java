@@ -6,6 +6,8 @@ import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
 import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.repository.MemberRepository;
+import Team2.com.security.exception.CustomException;
+import Team2.com.security.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -48,10 +50,8 @@ public class ItemService {
         //memberRepository.saveAndFlush(seller);
         //1. 로그인한 판매자 정보 가져오기
         Member member = memberRepository.findByUsernameAndAndRole(sellerName, MemberRoleEnum.SELLER).orElseThrow(() -> new IllegalArgumentException("요청하신 판매자가 정보가 존재하지 않습니다."));
-
         //2. 상품 등록
         Item item = itemRepository.saveAndFlush(new Item(requestItemDto.getItemName(), requestItemDto.getContent(), member, requestItemDto.getPrice(), requestItemDto.getCount()));
-
         //3. 등록 상품 반환
         return new ItemDto.ResponseItemDto(item.getName(), item.getContent(), item.getPrice(), item.getCount(), item.getMember().getUsername());
     }

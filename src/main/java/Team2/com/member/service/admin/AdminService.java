@@ -20,6 +20,6 @@ public interface AdminService {
 
     List<Request> getAppliesList(); // 요청 list 이거 dto로 고쳐야 할 것 같은데
 
-    List<MembersResponseDto> MemberListPaging(Pageable pageable, int page);
-    List<SellersResponseDto> SellerListPaging(Pageable pageable, int page);
+    List<MembersResponseDto> MemberListPaging(Pageable pageable, int page); // 페이징 - 사용자 조회
+    List<SellersResponseDto> SellerListPaging(Pageable pageable, int page);  // 페이징 - 판매자 조회
 }

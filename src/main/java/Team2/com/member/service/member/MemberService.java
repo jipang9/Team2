@@ -1,5 +1,6 @@
 package Team2.com.member.service.member;
 
+import Team2.com.member.dto.InfoResponseDto;
 import Team2.com.member.dto.admin.MembersResponseDto;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.dto.member.ApplyRequestDto;
@@ -27,5 +28,8 @@ public interface MemberService {
     void checkByRequest(Long id); // 사용자 요청이 있는지 확인
 
     void checkByMemberDuplicated(String username); // 사용자 중복 확인
+
+//    InfoResponseDto getMyInfo(Member member); // 내 정보 가지고 오기
+
 
 }

@@ -19,4 +19,5 @@ public class MsgResponseDto {
 
     private String msg;
     private int statusCode;
+
 }
