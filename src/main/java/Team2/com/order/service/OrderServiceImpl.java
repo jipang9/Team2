@@ -23,8 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import static Team2.com.security.exception.ErrorCode.INVALID_ITEM_COUNT;
-import static Team2.com.security.exception.ErrorCode.NOT_FOUND_ORDERNUMBER;
+import static Team2.com.security.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -114,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
         //판매자 상품이 맞는지 확인
         for(int i=0; i<order.getOrderItems().size(); i++){
             if(!order.getOrderItems().get(0).getItem().getMember().getUsername().equals(sellerName)){
-                throw new IllegalArgumentException("판매자의 상품과 일치하지 않습니다.");
+                throw new CustomException(INVALID_SELLER_ITEM);
             }
         }
         return new OrderResponseDto(order.getId(), order.getMember().getUsername(), order.getOrderItems());
@@ -131,11 +130,15 @@ public class OrderServiceImpl implements OrderService {
         //판매자 상품이 맞는지 확인
         for(int i=0; i<order.getOrderItems().size(); i++){
             if(!order.getOrderItems().get(0).getItem().getMember().getUsername().equals(sellerName)){
-                throw new IllegalArgumentException("판매자의 상품과 일치하지 않습니다.");
+                throw new CustomException(INVALID_SELLER_ITEM);
             }
         }
-        //주문상태 변경
+        //주문상태 변경 : N->Y
         order.updateOrderStatus();
-    }
 
+        //주문처리 완료 시 -> 해당 주문 내역 삭제
+        if(order.getOrderStatus().equals("Y")){
+            orderRepository.deleteById(orderId);
+        }
+    }
 }
