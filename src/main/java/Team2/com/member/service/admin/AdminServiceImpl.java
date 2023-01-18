@@ -43,6 +43,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
+    // 여기 예외처리 해야겠네
     public void addRoles(Long id) {
         Request request = requestRepository.findById(id).get();
         Member member = memberRepository.findById(request.getUser()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
@@ -51,6 +52,7 @@ public class AdminServiceImpl implements AdminService {
         requestRepository.delete(request);
     }
 
+    // 요청이 있어야지만 역할을 줬다 뺏을 수 있나? -> 한번 생각해볼 것.
     @Override
     public void deleteRoles(Long id) {
         Request request = requestRepository.findById(id).get();

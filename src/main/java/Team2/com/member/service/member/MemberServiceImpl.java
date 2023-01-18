@@ -113,7 +113,6 @@ public class MemberServiceImpl implements MemberService {
     public InfoDto info(Authentication authentication){
         String name = authentication.getName();
         String authorities = authentication.getAuthorities().toString();
-
         return new InfoDto(name, authorities);
     }
 

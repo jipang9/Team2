@@ -22,13 +22,11 @@ public class AdminController {
 
     private final AdminService adminService;
 
-
     @GetMapping("/members")
     public ResponseEntity<List<MembersResponseDto>> getMemberList
             (@RequestParam(defaultValue = "1") int page,
              @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.status(200).body(adminService.MemberListPaging(pageable, page - 1));
-
     }
 
     @GetMapping("/sellers")
@@ -44,8 +42,7 @@ public class AdminController {
         return ResponseEntity.status(200).body(adminService.getAppliesList());
     }
 
-    // 여기서 들어온 id 값은 사용자가 권한을 요청한 테이블의 id인데... 해당 요청에 의존적이다는 느낌이 있다..
-    // 과연 요청에 의존적인 컨트롤러를 구상하는 것이 맞는건지...
+
     @PatchMapping("/promoted/{id}")
     public ResponseEntity<Void> addRoles(@PathVariable Long id) {
         adminService.addRoles(id);

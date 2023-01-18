@@ -47,7 +47,7 @@ public class MemberController {
         return ResponseEntity.ok(new MsgResponseDto("로그인 완료", HttpStatus.OK.value()));
     }
 
-    @GetMapping("/sellers")
+    @GetMapping("/sellers") // 이 서비스의 목적을 모르겠음
     public ResponseEntity<List<SellersResponseDto>> getSellerList(@RequestParam(defaultValue = "0") String sellerId){
         List<SellersResponseDto> sellerLists;
         if(sellerId.equals("0")){

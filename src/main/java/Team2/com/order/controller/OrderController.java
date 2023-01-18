@@ -20,20 +20,25 @@ import java.util.List;
 @RequestMapping("/api")
 public class OrderController {
     private final OrderServiceImpl orderService;
+
+
+    // 주문하기
     @PostMapping("/customer/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public HttpStatus createOrder(@RequestBody OrderRequestDto requestOrderDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.order(requestOrderDto.getItems(), userDetails.getMember());
         return HttpStatus.OK;
-
     }
 
+    // 주문 목록 조회
     @GetMapping("/customer/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity<List<OrderResultDto>> getOrders(@RequestParam int offset, @RequestParam int limit){
         OrderResultDto orders = orderService.getOrders(offset, limit);
         return new ResponseEntity(orders, HttpStatus.OK);
     }
+
+
 
     //나(판매자)의 모든 주문 목록 list 조회
     @GetMapping("/seller/orders")
@@ -58,4 +63,5 @@ public class OrderController {
         orderService.orderCompleteProceeding(orderId, userDetails.getUsername());
         return new ResponseEntity("주문처리가 완료되었습니다.", HttpStatus.OK);
     }
+
 }
