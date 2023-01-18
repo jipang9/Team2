@@ -7,12 +7,8 @@ import Team2.com.member.entity.Member;
 import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.repository.MemberRepository;
 import Team2.com.member.service.member.MemberService;
-import Team2.com.order.dto.OrderDto;
-import Team2.com.order.entity.Order;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
@@ -52,7 +48,6 @@ public class ItemService {
 
         return new ItemDto.Response(item.getName(), item.getContent(), item.getPrice(), item.getCount(), item.getMember().getUsername());
     }
-
     //상품등록
     @Transactional
     public ItemDto.Response addItem(ItemDto.Request requestItemDto, String sellerName) {
