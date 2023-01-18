@@ -36,7 +36,6 @@ public class ItemController {
         return new ResponseEntity(item, HttpStatus.OK);
     }
 
-
     //제품 등록
     @PostMapping("/product")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
