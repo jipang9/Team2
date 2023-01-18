@@ -23,12 +23,14 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/customer/orders")
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity createOrder(@RequestBody OrderRequestDto requestOrderDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.order(requestOrderDto.getItems(), userDetails.getMember());
         return new ResponseEntity("주문이 완료되었습니다.", HttpStatus.OK);
     }
 
     @GetMapping("/customer/orders")
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity<List<OrderResultDto>> getOrders(@RequestParam int offset, @RequestParam int limit){
         OrderResultDto orders = orderService.getOrders(offset, limit);
         return new ResponseEntity(orders, HttpStatus.OK);
