@@ -3,6 +3,7 @@ package Team2.com.member.service.member;
 import Team2.com.member.dto.admin.MembersResponseDto;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.dto.member.ApplyRequestDto;
+import Team2.com.member.dto.member.InfoDto;
 import Team2.com.member.entity.Member;
 import Team2.com.member.entity.Request;
 import Team2.com.member.entity.Status;
@@ -15,12 +16,12 @@ import Team2.com.security.exception.CustomException;
 import Team2.com.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import static Team2.com.security.exception.ErrorCode.*;
@@ -106,6 +107,14 @@ public class MemberServiceImpl implements MemberService {
             return;
         } else
             throw new CustomException(MEMBER_Already_REQUEST);
+    }
+
+    @Override
+    public InfoDto info(Authentication authentication){
+        String name = authentication.getName();
+        String authorities = authentication.getAuthorities().toString();
+
+        return new InfoDto(name, authorities);
     }
 
 
