@@ -8,6 +8,7 @@ import Team2.com.member.repository.MemberRepository;
 import Team2.com.order.dto.OrderDto;
 import Team2.com.order.service.OrderService;
 import Team2.com.member.entity.MemberRoleEnum;
+import Team2.com.security.details.UserDetailsImpl;
 import Team2.com.security.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -39,18 +40,21 @@ public class OrderController {
     private static final Item item3 = new Item("신발", "신는거", seller, 60000, 100);
 
     @PostMapping("/customer/orders")
-    public ResponseEntity createOrder(@RequestBody OrderDto.Request requestOrderDto, HttpServletRequest request){
+    public ResponseEntity createOrder(@RequestBody OrderDto.Request requestOrderDto, HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String token = jwtUtil.resolveToken(request);
         Claims claims;
         if(token != null){
+
             if (jwtUtil.validateToken(token)) {
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
                 throw new IllegalArgumentException("Token Error");
             }
+
             Member member = memberRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
+
             orderService.order(requestOrderDto.getItems(), member);
             return new ResponseEntity("주문이 완료되었습니다.", HttpStatus.OK);
         }
@@ -69,9 +73,7 @@ public class OrderController {
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public ResponseEntity getAllCustomerBuyList(@RequestParam("page") Integer page, @AuthenticationPrincipal UserDetails userDetails){
         PageRequest pageRequest = PageRequest.of(page,10);
-
         List<OrderDto.Response> orderAllList = orderService.getAllCustomerBuyList(pageRequest, userDetails.getUsername());
-
         if(orderAllList.isEmpty()){
             return new ResponseEntity("주문 내역이 존재 하지않습니다.", HttpStatus.OK);
         }
