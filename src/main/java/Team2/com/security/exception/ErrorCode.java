@@ -22,6 +22,7 @@ public enum ErrorCode {
     NOT_MATCH_INFORMATION(HttpStatus.BAD_REQUEST, "회원정보가 일치하지 않습니다."),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "username과 password의 형식이 올바르지 않습니다."),
     INVALID_ITEM_COUNT(HttpStatus.BAD_REQUEST, "재고보다 많은 수량을 입력하였습니다."),
+    INVALID_ORDER_COUNT(HttpStatus.BAD_REQUEST, "주문 수량은 1개 이상이어야 합니다."),
 
     // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
     DUPLICATED_USERNAME(HttpStatus.CONFLICT, "중복된 username 입니다"),

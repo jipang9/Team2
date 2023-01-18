@@ -23,8 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import static Team2.com.security.exception.ErrorCode.INVALID_ITEM_COUNT;
-import static Team2.com.security.exception.ErrorCode.NOT_FOUND_ORDERNUMBER;
+import static Team2.com.security.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,10 +40,13 @@ public class OrderServiceImpl implements OrderService {
         ArrayList<Long> orderItemIds = new ArrayList();
         for (OrderRequestItemDto item : items) {
             Item findItem = itemRepository.findById(item.getId()).orElseThrow(
-                    () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
+                    () -> new CustomException(NOT_FOUND_ITEM)
             );
 
             // 2. OrderItem 만들기
+            if(item.getCount() <= 0){
+                throw new CustomException(INVALID_ORDER_COUNT);
+            }
             OrderItems orderItems = OrderItems.createOrderItems(findItem, item.getCount());
             OrderItems saveOrderItem = orderItemsRepository.saveAndFlush(orderItems);
             orderItemIds.add(saveOrderItem.getId());
