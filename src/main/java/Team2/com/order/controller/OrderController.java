@@ -22,9 +22,9 @@ public class OrderController {
     private final OrderServiceImpl orderService;
     @PostMapping("/customer/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
-    public ResponseEntity createOrder(@RequestBody OrderRequestDto requestOrderDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public HttpStatus createOrder(@RequestBody OrderRequestDto requestOrderDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.order(requestOrderDto.getItems(), userDetails.getMember());
-        return new ResponseEntity("주문이 완료되었습니다.", HttpStatus.OK);
+        return HttpStatus.OK;
 
     }
 

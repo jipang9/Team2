@@ -44,10 +44,6 @@ public class OrderServiceImpl implements OrderService {
                     () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
             );
 
-            if(findItem.getCount()<item.getCount()){
-                new CustomException(INVALID_ITEM_COUNT);
-            }
-
             // 2. OrderItem 만들기
             OrderItems orderItems = OrderItems.createOrderItems(findItem, item.getCount());
             OrderItems saveOrderItem = orderItemsRepository.saveAndFlush(orderItems);
