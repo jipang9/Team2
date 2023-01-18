@@ -38,7 +38,6 @@ public class MemberController {
     //로그인 구현
     @ResponseBody
     @PostMapping("/login")
-
     public ResponseEntity<MsgResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         memberService.login(loginRequestDto, response);
         return ResponseEntity.ok(new MsgResponseDto("로그인 완료", HttpStatus.OK.value()));
