@@ -5,6 +5,7 @@ import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.dto.member.ApplyRequestDto;
 import Team2.com.member.dto.member.LoginRequestDto;
 import Team2.com.member.dto.member.SignupRequestDto;
+import Team2.com.member.dto.member.InfoDto;
 import Team2.com.member.entity.Member;
 import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.entity.Request;
@@ -15,6 +16,7 @@ import Team2.com.security.exception.CustomException;
 import Team2.com.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,10 +110,21 @@ public class MemberServiceImpl implements MemberService {
             throw new CustomException(MEMBER_Already_REQUEST);
     }
 
+
 //    @Override
 //    public InfoResponseDto getMyInfo(Member member) {
 //        InfoResponseDto info = new InfoResponseDto(member.getUsername(), member.getRole().toString());
 //        return info;
 //    }
+
+    @Override
+    public InfoDto info(Authentication authentication){
+        String name = authentication.getName();
+        String authorities = authentication.getAuthorities().toString();
+
+        return new InfoDto(name, authorities);
+    }
+
+
 
 }

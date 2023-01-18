@@ -4,9 +4,11 @@ import Team2.com.member.dto.InfoResponseDto;
 import Team2.com.member.dto.admin.MembersResponseDto;
 import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.dto.member.ApplyRequestDto;
+import Team2.com.member.dto.member.InfoDto;
 import Team2.com.member.dto.member.LoginRequestDto;
 import Team2.com.member.dto.member.SignupRequestDto;
 import Team2.com.member.entity.Member;
+import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -29,7 +31,9 @@ public interface MemberService {
 
     void checkByMemberDuplicated(String username); // 사용자 중복 확인
 
+
 //    InfoResponseDto getMyInfo(Member member); // 내 정보 가지고 오기
 
+    InfoDto info(Authentication authentication);
 
 }
