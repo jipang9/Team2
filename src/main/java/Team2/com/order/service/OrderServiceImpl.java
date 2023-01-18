@@ -23,8 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import static Team2.com.security.exception.ErrorCode.INVALID_ITEM_COUNT;
-import static Team2.com.security.exception.ErrorCode.NOT_FOUND_ORDERNUMBER;
+import static Team2.com.security.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,10 +40,13 @@ public class OrderServiceImpl implements OrderService {
         ArrayList<Long> orderItemIds = new ArrayList();
         for (OrderRequestItemDto item : items) {
             Item findItem = itemRepository.findById(item.getId()).orElseThrow(
-                    () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
+                    () -> new CustomException(NOT_FOUND_ITEM)
             );
 
             // 2. OrderItem 만들기
+            if(item.getCount() <= 0){
+                throw new CustomException(INVALID_ORDER_COUNT);
+            }
             OrderItems orderItems = OrderItems.createOrderItems(findItem, item.getCount());
             OrderItems saveOrderItem = orderItemsRepository.saveAndFlush(orderItems);
             orderItemIds.add(saveOrderItem.getId());
@@ -66,10 +68,10 @@ public class OrderServiceImpl implements OrderService {
     // (고객) 주문내역 전체 조회
     @Transactional(readOnly = true)
     @Override
-    public OrderResultDto getOrders(int offset, int limit) {
+    public OrderResultDto getOrders(int offset, int limit, Member member) {
         PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
-        Page<Order> page = orderRepository.findAll(pageRequest);
-        Page<OrderResponseDto> map = page.map(order -> new OrderResponseDto(order.getId(), order.getMember().getUsername(), order.getOrderItems()));
+        Page<Order> page = orderRepository.findAllByMemberId(pageRequest, member.getId());
+        Page<OrderResponseDto> map = page.map(order -> new OrderResponseDto(order.getId(), order.getOrderItems()));
         List<OrderResponseDto> content = map.getContent(); // Order 배열
         long totalCount = map.getTotalElements(); // Order 전체 개수
 
@@ -94,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
 
             for(int i=0; i<key.getOrderItems().size(); i++){
                 if(sellerName.equals(key.getOrderItems().get(i).getItem().getMember().getUsername())){
-                    resultList.add(new OrderResponseDto(key.getId(), key.getMember().getUsername(), key.getOrderItems()));
+                    resultList.add(new OrderResponseDto(key.getId(), key.getOrderItems()));
                 }
             }
         }
@@ -117,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
                 throw new IllegalArgumentException("판매자의 상품과 일치하지 않습니다.");
             }
         }
-        return new OrderResponseDto(order.getId(), order.getMember().getUsername(), order.getOrderItems());
+        return new OrderResponseDto(order.getId(), order.getOrderItems());
     }
 
     //(판매자)주문완료처리
