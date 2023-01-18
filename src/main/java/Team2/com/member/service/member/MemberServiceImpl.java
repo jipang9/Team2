@@ -106,7 +106,6 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findBySellerId(Long.valueOf(sellerId));
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public void checkByRequest(Long id) {
@@ -123,6 +122,5 @@ public class MemberServiceImpl implements MemberService {
         InfoResponseDto info = new InfoResponseDto(member);
         return info;
     }
-
 
 }

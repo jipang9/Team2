@@ -53,6 +53,7 @@ public class Item {
         this.count = count;
     }
 
+
     public void removeCount(int count) {
         int restCount = this.count - count;
         if(restCount < 0){

@@ -1,15 +1,15 @@
 package Team2.com.member.entity;
 
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Request extends BaseEntity{
 
     @Id
@@ -29,7 +29,6 @@ public class Request extends BaseEntity{
         this.user = member;
         this.role = role;
         this.status = status;
-
     }
 
 

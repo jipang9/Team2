@@ -49,8 +49,9 @@ public class MemberController {
         return HttpStatus.OK;
     }
 
-    @GetMapping("/sellers")
-    public ResponseEntity<List<SellersResponseDto>> getSellerList(@RequestParam(defaultValue = "0") String sellerId) {
+    @GetMapping("/sellers") // 이 서비스의 목적을 모르겠음
+    public ResponseEntity<List<SellersResponseDto>> getSellerList(@RequestParam(defaultValue = "0") String sellerId){
+
         List<SellersResponseDto> sellerLists;
         if (sellerId.equals("0")) {
             sellerLists = memberService.getSellerLists();
@@ -59,5 +60,6 @@ public class MemberController {
         }
         return new ResponseEntity(sellerLists, HttpStatus.OK);
     }
+
 
 }

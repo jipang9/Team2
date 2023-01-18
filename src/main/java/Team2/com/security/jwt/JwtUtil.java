@@ -33,7 +33,7 @@ public class JwtUtil {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 60 * 60 * 1000L;
+    private static final long TOKEN_TIME = 60 * 60 * 1000*3000L; // 임의로 x 3000함 -> 발행시간 오지게 길 듯
 
 
     @Value("${spring.jwt.secretKey}")
@@ -56,7 +56,6 @@ public class JwtUtil {
         }
         return null;
     }
-
 
     public String createToken(String username, MemberRoleEnum role) {
         Date date = new Date();

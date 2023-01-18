@@ -27,8 +27,11 @@ public interface MemberService {
 
     // 관리부
     List<MembersResponseDto> getMemberLists(); // 유저 listUp(페이징 x)
-        List<SellersResponseDto> getSellerLists(); // 판매자 listUp ( 페이징 x )
+
+    List<SellersResponseDto> getSellerLists(); // 판매자 listUp ( 페이징 x )
+
     void apply(ApplyRequestDto applyRequestDto, Member member); // 사용자 요청(등업, 강등)
+
     List<SellersResponseDto> getSellerOne(String sellerId); // 판매자 한명 조회
 
 

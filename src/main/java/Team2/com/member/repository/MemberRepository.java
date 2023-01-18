@@ -5,6 +5,7 @@ import Team2.com.member.dto.admin.SellersResponseDto;
 import Team2.com.member.entity.Member;
 
 import Team2.com.member.entity.MemberRoleEnum;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,8 +29,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m where m.role='SELLER' order by m.id desc")
     List<SellersResponseDto> findAllBySellers();
 
-//    @Query("select m from Member m where m.role='SELLER' order by m.id desc")
-//    List<Member> findAllBySellersPaging(Pageable pageable);
+    @Query("select m from Member m where m.role='SELLER' order by m.id desc")
+    List<Member> findAllBySellersPaging(Pageable pageable);
 
     Optional<Member> findByNameAndAndRole(String name, MemberRoleEnum roleEnum);
 
