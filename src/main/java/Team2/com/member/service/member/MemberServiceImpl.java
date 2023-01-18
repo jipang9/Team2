@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public void signup(@Valid SignupRequestDto signupRequestDto) {
+    public void signup(SignupRequestDto signupRequestDto) {
         checkByMemberDuplicated(signupRequestDto.getUsername()); // 사용자 중복 처리 부분
         MemberRoleEnum role = MemberRoleEnum.CUSTOMER;
 

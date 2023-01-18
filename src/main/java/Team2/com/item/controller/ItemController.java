@@ -1,45 +1,38 @@
 package Team2.com.item.controller;
 
 
-import Team2.com.item.dto.ItemDto;
-import Team2.com.item.service.ItemService;
+import Team2.com.item.dto.ItemRequestDto;
+import Team2.com.item.dto.ItemResponseDto;
+import Team2.com.item.dto.ResultResponseDto;
+import Team2.com.item.service.ItemServiceImpl;
+import Team2.com.security.details.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/seller")
 public class ItemController {
 
-    private final ItemService itemService;
+    private final ItemServiceImpl itemService;
 
     //모든 제품 조회
     @GetMapping("/products")
-    @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getItemAllList(@RequestParam("page") Integer page){
-        PageRequest pageRequest = PageRequest.of(page,10);
-        List<ItemDto.ResponseItemDto> itemAllList = itemService.getItemAllList(pageRequest);
-        if(itemAllList.isEmpty()){
-            return new ResponseEntity("등록된 상품이 없습니다.", HttpStatus.OK);
-        }
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_USER"})
+    public ResponseEntity getItemAllList(@RequestParam int offset, @RequestParam int limit){
+        ResultResponseDto itemAllList = itemService.getItemAllList(offset, limit);
         return new ResponseEntity(itemAllList, HttpStatus.OK);
     }
 
     //하나의 제품 조회
     @GetMapping("/product/{id}")
-    @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_USER"})
     public ResponseEntity getItem(@PathVariable("id") Long itemId){
-        ItemDto.ResponseItemDto item = itemService.getItem(itemId);
-        if(item==null){
-            return new ResponseEntity("제품이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        }
+        ItemResponseDto item = itemService.getItem(itemId);
         return new ResponseEntity(item, HttpStatus.OK);
     }
 
@@ -47,25 +40,25 @@ public class ItemController {
     //제품 등록
     @PostMapping("/product")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity addItem(@RequestBody ItemDto.RequestItemDto requestItemDto, @AuthenticationPrincipal UserDetails userDetails){
+    public HttpStatus addItem(@RequestBody ItemRequestDto requestItemDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         itemService.addItem(requestItemDto, userDetails.getUsername());
-        return new ResponseEntity("제품등록이 완료되었습니다.", HttpStatus.OK);
+        return HttpStatus.OK;
     }
 
     //제품 수정
     @PutMapping("/product/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity modifyItem(@PathVariable("id") Long itemId, @RequestBody ItemDto.RequestItemDto requestItemDto, @AuthenticationPrincipal UserDetails userDetails){
+    public HttpStatus modifyItem(@PathVariable("id") Long itemId, @RequestBody ItemRequestDto requestItemDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         itemService.modifyItem(itemId, requestItemDto, userDetails.getUsername());
-        return new ResponseEntity("제품수정이 완료되었습니다.", HttpStatus.OK);
+        return HttpStatus.OK;
     }
 
 
     //제품 삭제
     @DeleteMapping("/product/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity deleteItem(@PathVariable("id") Long itemId, @AuthenticationPrincipal UserDetails userDetails){
+    public HttpStatus deleteItem(@PathVariable("id") Long itemId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         itemService.deleteItem(itemId, userDetails.getUsername());
-        return new ResponseEntity("제품삭제가 완료되었습니다.", HttpStatus.OK);
+        return HttpStatus.OK;
     }
 }
