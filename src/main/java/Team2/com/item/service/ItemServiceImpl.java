@@ -8,7 +8,12 @@ import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
 import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.repository.MemberRepository;
+import Team2.com.order.dto.OrderResponseDto;
+import Team2.com.order.dto.OrderResultDto;
+import Team2.com.order.entity.Order;
 import Team2.com.order.repository.OrderRepository;
+import Team2.com.order.service.OrderServiceImpl;
+import Team2.com.orderItem.repository.OrderItemsRepository;
 import Team2.com.security.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +34,8 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
 
     private final MemberRepository memberRepository;
-    private final OrderRepository orderRepository;
+
+    private final OrderItemsRepository orderItemsRepository;
 
     //전체 상품 조회
     @Transactional(readOnly = true)
@@ -86,8 +92,12 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void modifyItem(Long itemId, ItemRequestDto requestItemDto, String sellerName) {
 
-        //0. 상품변경 전 주문된 내역이 있는지 확인
+        //0. 상품변경 전 주문 내역이 있는지 확인
+        int itemOrderCount = orderItemsRepository.countByItem_Id(itemId);
 
+        if(itemOrderCount!=0){
+            throw new CustomException(INVALID_ITEM_STATUS);
+        }
 
         //1. 상품 조회
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(NOT_FOUND_ITEM));
@@ -104,6 +114,14 @@ public class ItemServiceImpl implements ItemService {
     //상품 삭제
     @Transactional
     public void deleteItem(Long itemId, String sellerName) {
+
+        //0. 상품변경 전 주문 내역이 있는지 확인
+        int itemOrderCount = orderItemsRepository.countByItem_Id(itemId);
+
+        if(itemOrderCount!=0){
+            throw new CustomException(INVALID_ITEM_STATUS);
+        }
+
         //1. 상품 조회
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(NOT_FOUND_ITEM));
 
