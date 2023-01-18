@@ -8,6 +8,7 @@ import Team2.com.member.repository.MemberRepository;
 import Team2.com.order.dto.OrderDto;
 import Team2.com.order.service.OrderService;
 import Team2.com.member.entity.MemberRoleEnum;
+import Team2.com.security.details.UserDetailsImpl;
 import Team2.com.security.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -59,20 +60,17 @@ public class OrderController {
     //나(판매자)의 모든 주문 목록 list 조회
     @GetMapping("/seller/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getAllCustomerBuyList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity getAllCustomerBuyList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
         OrderDto.Result orderAllList = orderService.getAllCustomerBuyList(offset, limit, userDetails.getUsername());
 
-        if(orderAllList.getCount()==0){
-            return new ResponseEntity("현재 판매하는 상품이 없습니다.", HttpStatus.OK);
-        }
         return new ResponseEntity(orderAllList, HttpStatus.OK);
     }
 
     //주문번호로 주문 조회
     @GetMapping("/seller/order/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity getCustomerBuyItem(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity getCustomerBuyItem(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         OrderDto.Response orderDto = orderService.getCustomerBuyItem(orderId, userDetails.getUsername());
         return new ResponseEntity(orderDto, HttpStatus.OK);
     }
@@ -80,7 +78,7 @@ public class OrderController {
     //판매자 주문 완료 처리
     @PutMapping("/seller/order/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public ResponseEntity orderCompleteProceeding(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity orderCompleteProceeding(@PathVariable("id") Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.orderCompleteProceeding(orderId, userDetails.getUsername());
         return new ResponseEntity("주문처리가 완료되었습니다.", HttpStatus.OK);
     }

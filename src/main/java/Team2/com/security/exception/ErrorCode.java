@@ -25,11 +25,14 @@ public enum ErrorCode {
 
     // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
     DUPLICATED_USERNAME(HttpStatus.CONFLICT, "중복된 username 입니다"),
+
+    DUPLICATED_ITEM(HttpStatus.CONFLICT, "이미 존재하는 상품입니다"),
     MEMBER_Already_REQUEST(HttpStatus.CONFLICT, "이미 요청된 회원입니다."),
 
     // 404 ->  NOT _ FOUND : 잘못된 리소스 접근 (ex. 존재하지 않는 값)
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다."),
-    NOT_FOUND_BOARD(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."),
+    NOT_FOUND_SELLER(HttpStatus.BAD_REQUEST, "판매자 정보를 찾을 수 없습니다."),
+    NOT_FOUND_ITEM(HttpStatus.BAD_REQUEST, "상품 정보를 찾을 수 없습니다."),
     NOT_EXIST_CATEGORY(HttpStatus.BAD_REQUEST, "카테고리가 존재하지 않습니다."),
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다."),
     UNABLE_TO_FULLFILL_REQUEST(HttpStatus.BAD_REQUEST, " 요청을 수행할 수 없습니다"),

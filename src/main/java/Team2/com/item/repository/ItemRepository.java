@@ -14,4 +14,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findAllByOrderByIdDesc(Pageable pageable);
 
     Optional<Item> findById(Long itemId);
+
+    Optional<Item> findByName(String name);
 }
