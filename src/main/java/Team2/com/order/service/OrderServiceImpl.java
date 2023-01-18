@@ -10,6 +10,7 @@ import Team2.com.order.entity.Order;
 import Team2.com.order.repository.OrderRepository;
 import Team2.com.orderItem.entity.OrderItems;
 import Team2.com.orderItem.repository.OrderItemsRepository;
+import Team2.com.security.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
+import static Team2.com.security.exception.ErrorCode.INVALID_ITEM_COUNT;
+import static Team2.com.security.exception.ErrorCode.NOT_FOUND_ORDERNUMBER;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,10 @@ public class OrderServiceImpl implements OrderService {
             Item findItem = itemRepository.findById(item.getId()).orElseThrow(
                     () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
             );
+
+            if(findItem.getCount()<item.getCount()){
+                new CustomException(INVALID_ITEM_COUNT);
+            }
 
             // 2. OrderItem 만들기
             OrderItems orderItems = OrderItems.createOrderItems(findItem, item.getCount());
@@ -77,7 +85,9 @@ public class OrderServiceImpl implements OrderService {
     //(판매자) 주문내역 전체 조회
     @Transactional
     @Override
-    public List<OrderResponseDto> getAllCustomerBuyList(PageRequest pageRequest, String sellerName) {
+    public OrderResultDto getAllCustomerBuyList(int offset, int limit, String sellerName) {
+
+        PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<Order> page = orderRepository.findAll(pageRequest);
         List<OrderResponseDto> resultList = new ArrayList<>();
@@ -92,7 +102,9 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
-        return resultList;
+        Long totalCount = (long)resultList.size();
+
+        return new OrderResultDto(offset, totalCount, resultList);
     }
 
     //(판매자)주문 내역 조회
@@ -101,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponseDto getCustomerBuyItem(Long orderId, String sellerName) {
 
         //주문조회
-        Order order = orderRepository.findById(orderId).orElseThrow(()-> new IllegalArgumentException("주문내역이 존재하지 않습니다."));
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new CustomException(NOT_FOUND_ORDERNUMBER));
 
         //판매자 상품이 맞는지 확인
         for(int i=0; i<order.getOrderItems().size(); i++){
@@ -118,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
     public void orderCompleteProceeding(Long orderId, String sellerName) {
 
         //주문조회
-        Order order = orderRepository.findById(orderId).orElseThrow(()-> new IllegalArgumentException("주문내역이 존재하지 않습니다."));
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new CustomException(NOT_FOUND_ORDERNUMBER));
 
         //판매자 상품이 맞는지 확인
         for(int i=0; i<order.getOrderItems().size(); i++){
