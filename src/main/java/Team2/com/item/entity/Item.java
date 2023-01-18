@@ -1,12 +1,15 @@
 package Team2.com.item.entity;
 
 import Team2.com.member.entity.Member;
+import Team2.com.security.exception.CustomException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import static Team2.com.security.exception.ErrorCode.INVALID_ITEM_COUNT;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -54,7 +57,7 @@ public class Item {
     public void removeCount(int count) {
         int restCount = this.count - count;
         if(restCount < 0){
-            throw new IllegalArgumentException("수량이 부족합니다.");
+            throw new CustomException(INVALID_ITEM_COUNT);
         }
         this.count = restCount;
     }
