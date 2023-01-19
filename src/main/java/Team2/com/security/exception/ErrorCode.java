@@ -22,7 +22,7 @@ public enum ErrorCode {
     INVALID_SELLER_ITEM(HttpStatus.BAD_REQUEST, "판매자가 일치하지 않습니다"),
     INVALID_ITEM_STATUS(HttpStatus.BAD_REQUEST, "현재 주문된 상품이기에 수정/삭제가 불가합니다."),
     INVALID_ITEM_NAME(HttpStatus.BAD_REQUEST, "상품명을 입력해주세요."),
-
+    INVALID_ITEM_COUNTOVER(HttpStatus.BAD_REQUEST, "상품 개수를 100,000개 이하로 등록해주세요."),
     DATA_ERROR(HttpStatus.BAD_REQUEST, "수량 및 가격, 상품명을 확인해주세요"),
 
 
