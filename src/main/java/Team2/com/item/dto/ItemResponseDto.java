@@ -1,5 +1,6 @@
 package Team2.com.item.dto;
 
+import Team2.com.item.entity.Item;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,5 +24,13 @@ public class ItemResponseDto {
         this.price = price;
         this.count = count;
         this.sellerName = sellerName;
+    }
+    public ItemResponseDto(Item item){
+        this.itemName = item.getName();
+        this.content = item.getContent();
+        this.price = item.getPrice();
+        this.count = item.getCount();
+        this.sellerName = item.getMember().getName();
+
     }
 }

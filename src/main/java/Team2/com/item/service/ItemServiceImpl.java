@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static Team2.com.security.exception.ErrorCode.*;
@@ -125,5 +126,13 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-
+    @Override
+    public List<ItemResponseDto> searchItems(String item) {
+        List<Item> items = itemRepository.findByContentContaining(item);
+        List<ItemResponseDto> resultData = new ArrayList<>();
+        for (Item item1 : items) {
+            resultData.add(new ItemResponseDto(item1));
+        }
+        return resultData;
+    }
 }

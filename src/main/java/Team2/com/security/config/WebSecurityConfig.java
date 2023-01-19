@@ -21,6 +21,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
+    private static final String[] PERMIT_URL_ARRAY = {
+            /* swagger v2 */
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
 
     private final JwtUtil jwtUtil;
 
@@ -35,7 +48,7 @@ public class WebSecurityConfig {
 //      //h2-console 사용 및 resources 접근 허용 설정
 //      //ignoring(): 이러한 경로도 들어온 것들은 인증 처리하는 것을 무시하겠다
 //      return (web) -> web.ignoring()
-//              .requestMatchers(PathRequest.toH2Console());
+//              .antMatchers("/swagger-ui.html/**");
 //  }
 
     @Bean
@@ -43,6 +56,7 @@ public class WebSecurityConfig {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/member/**").permitAll()
+                .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return http.build();
