@@ -43,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    // 여기 예외처리 해야겠네
+    // 여기 예외처리 해야겠네 -> 요청에 관한 (강등또한 마찬가지로 체크)
     public void addRoles(Long id) {
         Request request = requestRepository.findById(id).get();
         Member member = memberRepository.findById(request.getUser()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
@@ -90,3 +90,4 @@ public class AdminServiceImpl implements AdminService {
     }
 
 }
+

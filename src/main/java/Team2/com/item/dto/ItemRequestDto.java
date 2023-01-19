@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(force = true)
 public class ItemRequestDto {
+
     private String itemName;
 
     private String content;

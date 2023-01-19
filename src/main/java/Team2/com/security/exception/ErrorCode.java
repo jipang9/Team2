@@ -12,7 +12,6 @@ public enum ErrorCode {
 
     // 500 -> INTERNAL SERVER ERROR : 서버에러
 
-
     // 400 ->  BAD _ REQUEST : 잘못된 요청 (ex. 파라미터 값을 확인해주세요 )
     NOT_MATCH_INFORMATION(HttpStatus.BAD_REQUEST, "회원정보가 일치하지 않습니다."),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "username과 password의 형식이 올바르지 않습니다."),
@@ -22,7 +21,8 @@ public enum ErrorCode {
     INVALID_ITEM_STATUS(HttpStatus.BAD_REQUEST, "현재 주문된 상품이기에 수정/삭제가 불가합니다."),
 
     // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
-    DUPLICATED_USERNAME(HttpStatus.CONFLICT, "중복된 username 입니다"),
+    DUPLICATED_USERNAME(HttpStatus.CONFLICT, "이미 사용중인 아이디입니다. 다시 확인하세요 "),
+    DUPLICATED_PHONENUMBER(HttpStatus.CONFLICT, "이미 사용중인 휴대폰 번호 입니다. 다시 확인하세요 "),
 
     DUPLICATED_ITEM(HttpStatus.CONFLICT, "이미 존재하는 상품입니다"),
     MEMBER_Already_REQUEST(HttpStatus.CONFLICT, "이미 요청된 회원입니다."),

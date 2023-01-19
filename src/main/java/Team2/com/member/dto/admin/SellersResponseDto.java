@@ -11,19 +11,16 @@ import lombok.RequiredArgsConstructor;
 public class SellersResponseDto {
 
     private final Long id;
-    private final String username;
+    private final String email;
     private final String role;
-
+    private final String name;
 
     public SellersResponseDto(Member member) {
         this.id = member.getId();
-        this.username = member.getUsername();
+        this.email = member.getEmail();
         this.role = member.getRole().toString();
+        this.name = member.getName();
     }
 
-
-    public static SellersResponseDto of (Member member){
-        return new SellersResponseDto(member);
-    }
 
 }

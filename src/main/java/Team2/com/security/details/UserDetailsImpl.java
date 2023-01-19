@@ -11,21 +11,18 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
-    //인증이 완료된 사용자 추가
     private final Member member;
-    private final String username;
+    private final String name;
 
-    public UserDetailsImpl(Member member, String username) {
+    public UserDetailsImpl(Member member, String name) {
         this.member = member;
-        this.username = username;
+        this.name = name;
     }
 
-    //인증완료된 User 를 가져오는 Getter
     public Member getMember() {
         return member;
     }
 
-    //사용자의 권한 GrantedAuthority 로 추상화 및 반환
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         MemberRoleEnum role = member.getRole();
@@ -33,14 +30,12 @@ public class UserDetailsImpl implements UserDetails {
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(simpleGrantedAuthority);
-
         return authorities;
     }
 
-    //사용자의 ID, PWD Getter
     @Override
     public String getUsername() {
-        return this.username;
+        return this.getMember().getName();
     }
 
     @Override

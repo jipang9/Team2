@@ -1,5 +1,5 @@
-package Team2.com.order.service;
 
+package Team2.com.order.service;
 import Team2.com.item.entity.Item;
 import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
@@ -84,18 +84,15 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public OrderResultDto getAllCustomerBuyList(int offset, int limit, String sellerName) {
-
         PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
-
         Page<Order> page = orderRepository.findAll(pageRequest);
         List<OrderResponseDto> resultList = new ArrayList<>();
-
         Iterator<Order> keys = page.iterator();
         while( keys.hasNext() ){
             Order key = keys.next();
 
             for(int i=0; i<key.getOrderItems().size(); i++){
-                if(sellerName.equals(key.getOrderItems().get(i).getItem().getMember().getUsername())){
+                if(sellerName.equals(key.getOrderItems().get(i).getItem().getMember().getName())){
                     resultList.add(new OrderResponseDto(key.getId(), key.getOrderItems()));
                 }
             }
@@ -115,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
 
         //판매자 상품이 맞는지 확인
         for(int i=0; i<order.getOrderItems().size(); i++){
-            if(!order.getOrderItems().get(0).getItem().getMember().getUsername().equals(sellerName)){
+            if(!order.getOrderItems().get(0).getItem().getMember().getName().equals(sellerName)){
                 throw new CustomException(INVALID_SELLER_ITEM);
             }
         }
@@ -132,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
 
         //판매자 상품이 맞는지 확인
         for(int i=0; i<order.getOrderItems().size(); i++){
-            if(!order.getOrderItems().get(0).getItem().getMember().getUsername().equals(sellerName)){
+            if(!order.getOrderItems().get(0).getItem().getMember().getName().equals(sellerName)){
                 throw new CustomException(INVALID_SELLER_ITEM);
             }
         }
@@ -145,3 +142,4 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 }
+

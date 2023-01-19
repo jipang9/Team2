@@ -2,23 +2,24 @@ package Team2.com.member.entity;
 
 import Team2.com.security.exception.CustomException;
 import Team2.com.security.exception.ErrorCode;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
-public class Member{
+@Builder
+public class Member extends  BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -26,13 +27,16 @@ public class Member{
     @Enumerated(value = EnumType.STRING)
     private MemberRoleEnum role;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int point;
 
-    @Builder
-    public Member(String username, String password, MemberRoleEnum role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
+    @Column(nullable = false, name = "phone_number", unique = true)
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private String name;
+
 
     public void changeRole(MemberRoleEnum role){
         this.role= role;
