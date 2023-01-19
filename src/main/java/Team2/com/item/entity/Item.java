@@ -45,14 +45,13 @@ public class Item {
         this.count = count;
     }
 
-    public void update(String name, String content,Member member, int price, int count){
+    public void update(String name, String content, Member member, int price, int count){
         this.name = name;
         this.content = content;
         this.member = member;
         this.price = price;
         this.count = count;
     }
-
 
     public void removeCount(int count) {
         int restCount = this.count - count;

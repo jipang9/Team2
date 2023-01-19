@@ -14,7 +14,7 @@ public interface OrderItemsRepository extends JpaRepository<OrderItems, Long> {
 
     Integer countByItem_Id(long itemId);
 
-    @Query("select o from OrderItems o, Item i where o.item.id = i.id and i.member.id = :memberId")
-    Page<OrderItems> method(Pageable pageRequest, @Param("memberId") long seller);
+    @Query("select o from OrderItems o, Item i where o.item.id = i.id and i.member.name = :sellerName")
+    Page<OrderItems> method(Pageable pageRequest, @Param("sellerName") String sellerName);
 }
 

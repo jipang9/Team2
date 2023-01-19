@@ -18,7 +18,7 @@ public interface ItemService {
 
     void deleteItem(Long itemId, String sellerName); //상품 삭제
 
-    ResultResponseDto getItemAllList(int offset, int limit); // 상품 리스트 출력
-
+    ResultResponseDto getItemAllList(int offset, int limit); // 전체 상품 리스트 출력
+    ResultResponseDto getSellerItemAllList(int offset, int limit, String sellerName);   //판매자 전체 상품 조회
     ItemResponseDto getItem(Long itemId); // 상품 단일 조회 ->
 }

@@ -84,20 +84,20 @@ public class OrderServiceImpl implements OrderService {
     //(판매자) 주문내역 전체 조회
     @Transactional
     @Override
-    public OrderResultDto getAllCustomerBuyList(int offset, int limit, long sellerId) {
+    public OrderResultDto getAllCustomerBuyList(int offset, int limit, String sellerName) {
 
         PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
         List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
         List<OrderItems> list = new ArrayList<>();
 
-        Page<OrderItems> page = orderItemsRepository.method(pageRequest, sellerId);
+        Page<OrderItems> page = orderItemsRepository.method(pageRequest, sellerName);
 
         Iterator<OrderItems> keys = page.iterator();
         while (keys.hasNext()) {
             OrderItems orderItem = keys.next();
 
             for (int i = 0; i < orderItem.getOrder().getOrderItems().size(); i++) {
-                if (orderItem.getOrder().getOrderItems().get(i).getItem().getMember().getId().equals(sellerId)) {
+                if (orderItem.getOrder().getOrderItems().get(i).getItem().getMember().getName().equals(sellerName)) {
                     list.add(orderItem.getOrder().getOrderItems().get(i));
                 }
             }
