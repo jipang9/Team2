@@ -43,7 +43,7 @@ public class OrderController {
     @GetMapping("/seller/orders")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public ResponseEntity getAllCustomerBuyList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        OrderResultDto orderAllList = orderService.getAllCustomerBuyList(offset, limit, userDetails.getUsername());
+        OrderResultDto orderAllList = orderService.getAllCustomerBuyList(offset, limit, userDetails.getMember().getId());
         return new ResponseEntity(orderAllList, HttpStatus.OK);
     }
 

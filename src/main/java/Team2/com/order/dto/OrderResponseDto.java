@@ -12,7 +12,6 @@ public class OrderResponseDto {
     private Long id;
     private List<OrderItemsResponseDto> orderItemsList = new ArrayList<>();
 
-
     public OrderResponseDto(Long id, List<OrderItems> orderItems) {
         this.id = id;
         for (OrderItems o : orderItems) {
@@ -20,4 +19,5 @@ public class OrderResponseDto {
             orderItemsList.add(orderItemsDto);
         }
     }
+
 }

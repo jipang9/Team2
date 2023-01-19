@@ -29,14 +29,14 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//  @Bean
-//  //WebSecurityCustomizer 은 SecurityFilterChain 보다 우선적으로 걸리는 설정
-//  public WebSecurityCustomizer webSecurityCustomizer() {
-//      //h2-console 사용 및 resources 접근 허용 설정
-//      //ignoring(): 이러한 경로도 들어온 것들은 인증 처리하는 것을 무시하겠다
-//      return (web) -> web.ignoring()
-//              .requestMatchers(PathRequest.toH2Console());
-//  }
+  @Bean
+  //WebSecurityCustomizer 은 SecurityFilterChain 보다 우선적으로 걸리는 설정
+  public WebSecurityCustomizer webSecurityCustomizer() {
+      //h2-console 사용 및 resources 접근 허용 설정
+      //ignoring(): 이러한 경로도 들어온 것들은 인증 처리하는 것을 무시하겠다
+      return (web) -> web.ignoring()
+              .requestMatchers(PathRequest.toH2Console());
+  }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

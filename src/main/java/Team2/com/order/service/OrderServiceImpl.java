@@ -1,5 +1,6 @@
 
 package Team2.com.order.service;
+
 import Team2.com.item.entity.Item;
 import Team2.com.item.repository.ItemRepository;
 import Team2.com.member.entity.Member;
@@ -44,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
             );
 
             // 2. OrderItem 만들기
-            if(item.getCount() <= 0){
+            if (item.getCount() <= 0) {
                 throw new CustomException(INVALID_ORDER_COUNT);
             }
             OrderItems orderItems = OrderItems.createOrderItems(findItem, item.getCount());
@@ -83,23 +84,30 @@ public class OrderServiceImpl implements OrderService {
     //(판매자) 주문내역 전체 조회
     @Transactional
     @Override
-    public OrderResultDto getAllCustomerBuyList(int offset, int limit, String sellerName) {
-        PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
-        Page<Order> page = orderRepository.findAll(pageRequest);
-        List<OrderResponseDto> resultList = new ArrayList<>();
-        Iterator<Order> keys = page.iterator();
-        while( keys.hasNext() ){
-            Order key = keys.next();
+    public OrderResultDto getAllCustomerBuyList(int offset, int limit, long sellerId) {
 
-            for(int i=0; i<key.getOrderItems().size(); i++){
-                if(sellerName.equals(key.getOrderItems().get(i).getItem().getMember().getName())){
-                    resultList.add(new OrderResponseDto(key.getId(), key.getOrderItems()));
+        PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id"));
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+        List<OrderItems> list = new ArrayList<>();
+
+        Page<OrderItems> page = orderItemsRepository.method(pageRequest, sellerId);
+
+        Iterator<OrderItems> keys = page.iterator();
+        while (keys.hasNext()) {
+            OrderItems orderItem = keys.next();
+
+            for (int i = 0; i < orderItem.getOrder().getOrderItems().size(); i++) {
+                if (orderItem.getOrder().getOrderItems().get(i).getItem().getMember().getId().equals(sellerId)) {
+                    list.add(orderItem.getOrder().getOrderItems().get(i));
                 }
             }
+            orderResponseDtos.add(new OrderResponseDto(orderItem.getOrder().getId(), list));
+            list.clear();
         }
-        Long totalCount = (long)resultList.size();
 
-        return new OrderResultDto(offset, totalCount, resultList);
+        long totalCount = orderResponseDtos.size();
+
+        return new OrderResultDto(offset, totalCount, orderResponseDtos);
     }
 
     //(판매자)주문 내역 조회
@@ -108,11 +116,11 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponseDto getCustomerBuyItem(Long orderId, String sellerName) {
 
         //주문조회
-        Order order = orderRepository.findById(orderId).orElseThrow(()-> new CustomException(NOT_FOUND_ORDERNUMBER));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new CustomException(NOT_FOUND_ORDERNUMBER));
 
         //판매자 상품이 맞는지 확인
-        for(int i=0; i<order.getOrderItems().size(); i++){
-            if(!order.getOrderItems().get(0).getItem().getMember().getName().equals(sellerName)){
+        for (int i = 0; i < order.getOrderItems().size(); i++) {
+            if (!order.getOrderItems().get(0).getItem().getMember().getName().equals(sellerName)) {
                 throw new CustomException(INVALID_SELLER_ITEM);
             }
         }
@@ -125,11 +133,11 @@ public class OrderServiceImpl implements OrderService {
     public void orderCompleteProceeding(Long orderId, String sellerName) {
 
         //주문조회
-        Order order = orderRepository.findById(orderId).orElseThrow(()-> new CustomException(NOT_FOUND_ORDERNUMBER));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new CustomException(NOT_FOUND_ORDERNUMBER));
 
         //판매자 상품이 맞는지 확인
-        for(int i=0; i<order.getOrderItems().size(); i++){
-            if(!order.getOrderItems().get(0).getItem().getMember().getName().equals(sellerName)){
+        for (int i = 0; i < order.getOrderItems().size(); i++) {
+            if (!order.getOrderItems().get(0).getItem().getMember().getName().equals(sellerName)) {
                 throw new CustomException(INVALID_SELLER_ITEM);
             }
         }
@@ -137,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
         order.updateOrderStatus();
 
         //주문처리 완료 시 -> 해당 주문 내역 삭제
-        if(order.getOrderStatus().equals("Y")){
+        if (order.getOrderStatus().equals("Y")) {
             orderRepository.deleteById(orderId);
         }
     }
