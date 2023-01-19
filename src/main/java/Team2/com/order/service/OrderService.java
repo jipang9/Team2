@@ -12,7 +12,7 @@ public interface OrderService {
 
     OrderResultDto getOrders(int offset, int limit, Member member); // (고객) 주문내역 전체 조회
 
-    OrderResultDto getAllCustomerBuyList(int offset, int limit, String sellerName); //(판매자) 주문내역 전체 조회
+    OrderResultDto getAllCustomerBuyList(int offset, int limit, long sellerId); //(판매자) 주문내역 전체 조회
 
     OrderResponseDto getCustomerBuyItem(Long orderId, String sellerName); //(판매자)주문 내역 조회
 

@@ -18,7 +18,7 @@ public class OrderResponseDto {
         this.id = id;
         this.totalPrice = totalPrice(orderItems);
         for (OrderItems o : orderItems) {
-            OrderItemsResponseDto orderItemsDto = new OrderItemsResponseDto(o.getItem().getId(), o.getItem().getName(), o.getItem().getPrice(), o.getCount());
+            OrderItemsResponseDto orderItemsDto = new OrderItemsResponseDto(o.getItem().getId(), o.getItem().getName());
             orderItemsList.add(orderItemsDto);
         }
     }
