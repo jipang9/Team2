@@ -48,7 +48,7 @@ public class WebSecurityConfig {
 //      //h2-console 사용 및 resources 접근 허용 설정
 //      //ignoring(): 이러한 경로도 들어온 것들은 인증 처리하는 것을 무시하겠다
 //      return (web) -> web.ignoring()
-//              .antMatchers("/swagger-ui.html/**");
+//              .requestMatchers(PathRequest.toH2Console());
 //  }
 
     @Bean

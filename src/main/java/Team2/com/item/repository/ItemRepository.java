@@ -18,4 +18,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findByName(String name);
 
     List<Item> findByContentContaining(String item);
+
+    Page<Item> findByMemberName(Pageable pageable, String sellerName);
 }
