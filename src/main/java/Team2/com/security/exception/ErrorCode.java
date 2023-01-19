@@ -16,9 +16,14 @@ public enum ErrorCode {
     NOT_MATCH_INFORMATION(HttpStatus.BAD_REQUEST, "회원정보가 일치하지 않습니다."),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "username과 password의 형식이 올바르지 않습니다."),
     INVALID_ITEM_COUNT(HttpStatus.BAD_REQUEST, "재고보다 많은 수량을 입력하였습니다."),
+    INVALID_ITEM_PRICE(HttpStatus.BAD_REQUEST, "상품 가격은 1원 이상이어야 합니다."),
+    INVALID_ITEM_ZERO_COUNT(HttpStatus.BAD_REQUEST, "상품 재고는 1개 이상이어야 합니다."),
     INVALID_ORDER_COUNT(HttpStatus.BAD_REQUEST, "주문 수량은 1개 이상이어야 합니다."),
     INVALID_SELLER_ITEM(HttpStatus.BAD_REQUEST, "판매자가 일치하지 않습니다"),
     INVALID_ITEM_STATUS(HttpStatus.BAD_REQUEST, "현재 주문된 상품이기에 수정/삭제가 불가합니다."),
+    INVALID_ITEM_NAME(HttpStatus.BAD_REQUEST, "상품명을 입력해주세요."),
+
+
 
     // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
     DUPLICATED_USERNAME(HttpStatus.CONFLICT, "이미 사용중인 아이디입니다. 다시 확인하세요 "),
