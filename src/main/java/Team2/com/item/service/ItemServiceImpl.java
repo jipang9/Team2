@@ -33,6 +33,15 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemResponseDto addItem(ItemRequestDto requestItemDto, String sellerName) {
+        if(requestItemDto.getItemName().isBlank()){
+            throw new CustomException(INVALD_ITEM_NAME);
+        }
+        if(requestItemDto.getPrice() == 0){
+            throw new CustomException(INVALID_ITEM_PRICE);
+        }
+        if(requestItemDto.getCount() == 0){
+            throw new CustomException(INVALID_ITEM_ZERO_COUNT);
+        }
         Member member = memberRepository.findByNameAndAndRole(sellerName, MemberRoleEnum.SELLER).orElseThrow(() -> new CustomException(NOT_FOUND_SELLER));
         Item checkItem = itemRepository.findByName(requestItemDto.getItemName());
         if (checkItem != null) {
