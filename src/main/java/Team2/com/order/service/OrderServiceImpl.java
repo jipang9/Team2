@@ -42,7 +42,6 @@ public class OrderServiceImpl implements OrderService {
             Item findItem = itemRepository.findById(item.getId()).orElseThrow(
                     () -> new CustomException(NOT_FOUND_ITEM)
             );
-
             // 2. OrderItem 만들기
             if(item.getCount() <= 0){
                 throw new CustomException(INVALID_ORDER_COUNT);

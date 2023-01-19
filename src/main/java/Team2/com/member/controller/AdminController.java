@@ -36,12 +36,10 @@ public class AdminController {
         return ResponseEntity.status(200).body(adminService.SellerListPaging(pageable, page-1));
     }
 
-
     @GetMapping("/applys")
     public ResponseEntity<List<Request>> getApplyList() {
         return ResponseEntity.status(200).body(adminService.getAppliesList());
     }
-
 
     @PatchMapping("/promoted/{id}")
     public ResponseEntity<Void> addRoles(@PathVariable Long id) {

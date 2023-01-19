@@ -79,7 +79,6 @@ public class ItemServiceImpl implements ItemService {
             if (itemOrderCount != 0) {
                 throw new CustomException(INVALID_ITEM_STATUS);
             }
-
             //2. 해당 상품의 판매자 인지 확인
             if (!item.getMember().getName().equals(sellerName)) {
                 throw new CustomException(NOT_FOUND_SELLER);}
@@ -99,7 +98,7 @@ public class ItemServiceImpl implements ItemService {
         }
         //1. 상품 조회
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(NOT_FOUND_ITEM));
-        //2. 해당 상품의 판매자 인지 확인
+        //2. 해당 상품의 판매자 인지 확인`
         if (!item.getMember().getName().equals(sellerName)) {
             if (!item.getMember().getName().equals(sellerName)) {
                 throw new CustomException(NOT_FOUND_SELLER);}
