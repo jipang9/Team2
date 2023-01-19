@@ -9,7 +9,6 @@ public class OrderItemsResponseDto {
     private int price;
     private int count;
 
-
     public OrderItemsResponseDto(Long id, String itemName, int price, int count) {
         this.id = id;
         this.itemName = itemName;

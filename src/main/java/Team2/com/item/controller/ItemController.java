@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/seller")
+@RequestMapping("/api")
 public class ItemController {
 
     private final ItemService itemService;
 
     //제품 등록
-    @PostMapping("/product")
+    @PostMapping("/seller/product")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public HttpStatus addItem(@RequestBody ItemRequestDto requestItemDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         itemService.addItem(requestItemDto, userDetails.getUsername());
@@ -36,8 +36,17 @@ public class ItemController {
         return new ResponseEntity(itemAllList, HttpStatus.OK);
     }
 
+    //판매자 전체 상품 조회
+    @GetMapping("/seller/products")
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
+    public ResponseEntity getSellerItemAllList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        ResultResponseDto sellerItemAllList = itemService.getSellerItemAllList(offset, limit, userDetails.getUsername());
+        return new ResponseEntity(sellerItemAllList, HttpStatus.OK);
+    }
+
+
     //단일 제품 조회
-    @GetMapping("/product/{id}")
+    @GetMapping("/seller/product/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity getItem(@PathVariable("id") Long itemId){
         ItemResponseDto item = itemService.getItem(itemId);
@@ -46,7 +55,7 @@ public class ItemController {
 
 
     // 상품 수정
-    @PutMapping("/product/{id}")
+    @PutMapping("/seller/product/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public HttpStatus modifyItem(@PathVariable("id") Long itemId, @RequestBody ItemRequestDto requestItemDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         itemService.modifyItem(itemId, requestItemDto, userDetails.getUsername());
