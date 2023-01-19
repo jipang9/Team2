@@ -6,12 +6,17 @@ import Team2.com.item.dto.ItemResponseDto;
 import Team2.com.item.dto.ResultResponseDto;
 import Team2.com.item.service.ItemService;
 import Team2.com.security.details.UserDetailsImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,11 +26,10 @@ public class ItemController {
 
     private final ItemService itemService;
 
-
     @PostMapping("/product")
     @ApiOperation(value = "상품 등록")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
-    public HttpStatus addItem(@RequestBody ItemRequestDto requestItemDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public HttpStatus addItem(@Valid @RequestBody ItemRequestDto requestItemDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         itemService.addItem(requestItemDto, userDetails.getUsername());
         return HttpStatus.OK;
     }
@@ -55,7 +59,6 @@ public class ItemController {
         return HttpStatus.OK;
     }
 
-
     @ApiOperation(value = "상품 삭제")
     @DeleteMapping("/product/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
@@ -69,4 +72,5 @@ public class ItemController {
         List<ItemResponseDto> items = itemService.searchItems(item);
         return ResponseEntity.status(200).body(items);
     }
+
 }

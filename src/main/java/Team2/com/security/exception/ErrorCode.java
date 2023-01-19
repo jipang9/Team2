@@ -23,6 +23,8 @@ public enum ErrorCode {
     INVALID_ITEM_STATUS(HttpStatus.BAD_REQUEST, "현재 주문된 상품이기에 수정/삭제가 불가합니다."),
     INVALID_ITEM_NAME(HttpStatus.BAD_REQUEST, "상품명을 입력해주세요."),
 
+    DATA_ERROR(HttpStatus.BAD_REQUEST, "수량 및 가격, 상품명을 확인해주세요"),
+
 
 
     // 409 ->  CONFLICT : 중복 데이터 (ex. 이미 중복된 값)
