@@ -34,7 +34,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDto addItem(ItemRequestDto requestItemDto, String sellerName) {
         if(requestItemDto.getItemName().isBlank()){
-            throw new CustomException(INVALD_ITEM_NAME);
+            throw new CustomException(INVALID_ITEM_NAME);
         }
         if(requestItemDto.getPrice() == 0){
             throw new CustomException(INVALID_ITEM_PRICE);
@@ -79,7 +79,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void modifyItem(Long itemId, ItemRequestDto requestItemDto, String sellerName) {
         if(requestItemDto.getItemName().isBlank()){
-            throw new CustomException(INVALD_ITEM_NAME);
+            throw new CustomException(INVALID_ITEM_NAME);
         }
         if(requestItemDto.getPrice() == 0){
             throw new CustomException(INVALID_ITEM_PRICE);

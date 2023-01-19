@@ -21,7 +21,7 @@ public enum ErrorCode {
     INVALID_ORDER_COUNT(HttpStatus.BAD_REQUEST, "주문 수량은 1개 이상이어야 합니다."),
     INVALID_SELLER_ITEM(HttpStatus.BAD_REQUEST, "판매자가 일치하지 않습니다"),
     INVALID_ITEM_STATUS(HttpStatus.BAD_REQUEST, "현재 주문된 상품이기에 수정/삭제가 불가합니다."),
-    INVALD_ITEM_NAME(HttpStatus.BAD_REQUEST, "상품명을 입력해주세요."),
+    INVALID_ITEM_NAME(HttpStatus.BAD_REQUEST, "상품명을 입력해주세요."),
 
 
 
