@@ -9,16 +9,15 @@ import Team2.com.member.entity.Member;
 import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.repository.MemberRepository;
 import Team2.com.orderItem.repository.OrderItemsRepository;
-import Team2.com.security.details.UserDetailsImpl;
 import Team2.com.security.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static Team2.com.security.exception.ErrorCode.*;
@@ -150,4 +149,18 @@ public class ItemServiceImpl implements ItemService {
         //3. 상품 삭제
         itemRepository.deleteById(itemId);
     }
+
+    @Override
+    public List<ItemResponseDto> searchItems(String item) {
+        List<Item> items = itemRepository.findByContentContaining(item);
+        List<ItemResponseDto> resultData = new ArrayList<>();
+        for (Item item1 : items) {
+            resultData.add(new ItemResponseDto(item1));
+        }
+        return resultData;
+    }
+
 }
+
+
+

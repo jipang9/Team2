@@ -9,6 +9,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 public interface ItemService {
 
 
@@ -21,4 +23,6 @@ public interface ItemService {
     ResultResponseDto getItemAllList(int offset, int limit); // 전체 상품 리스트 출력
     ResultResponseDto getSellerItemAllList(int offset, int limit, String sellerName);   //판매자 전체 상품 조회
     ItemResponseDto getItem(Long itemId); // 상품 단일 조회 ->
+
+    List<ItemResponseDto> searchItems(String item);
 }
