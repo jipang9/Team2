@@ -34,7 +34,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDto addItem(ItemRequestDto requestItemDto, String sellerName) {
         if(requestItemDto.getItemName().isBlank()){
-            throw new CustomException(INVALD_ITEM_NAME);
+            throw new CustomException(INVALID_ITEM_NAME);
         }
         if(requestItemDto.getPrice() == 0){
             throw new CustomException(INVALID_ITEM_PRICE);
@@ -78,6 +78,15 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public void modifyItem(Long itemId, ItemRequestDto requestItemDto, String sellerName) {
+        if(requestItemDto.getItemName().isBlank()){
+            throw new CustomException(INVALID_ITEM_NAME);
+        }
+        if(requestItemDto.getPrice() == 0){
+            throw new CustomException(INVALID_ITEM_PRICE);
+        }
+        if(requestItemDto.getCount() == 0){
+            throw new CustomException(INVALID_ITEM_ZERO_COUNT);
+        }
         //1. 상품 조회
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomException(NOT_FOUND_ITEM));
         //2. 해당 상품의 판매자 인지 확인
