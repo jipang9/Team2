@@ -45,7 +45,7 @@ public class ItemController {
 
     @GetMapping("/seller/products")
     @ApiOperation(value = "판매자 제품 조회")
-    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public ResponseEntity getSellerItemAllList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResultResponseDto selleritemAllList = itemService.getSellerItemAllList(offset, limit, userDetails.getUsername());
         return new ResponseEntity(selleritemAllList, HttpStatus.OK);
