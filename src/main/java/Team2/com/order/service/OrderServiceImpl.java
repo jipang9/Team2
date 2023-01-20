@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
         List<OrderItems> list = new ArrayList<>();
 
-        Page<OrderItems> page = orderItemsRepository.method(pageRequest, sellerName);
+        Page<OrderItems> page = orderItemsRepository.checkItemSeller(pageRequest, sellerName);
 
         Iterator<OrderItems> keys = page.iterator();
         while (keys.hasNext()) {
