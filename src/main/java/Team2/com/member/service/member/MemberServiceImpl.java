@@ -12,6 +12,8 @@ import Team2.com.member.entity.Request;
 import Team2.com.member.entity.Status;
 import Team2.com.member.repository.MemberRepository;
 import Team2.com.member.repository.RequestRepository;
+import Team2.com.order.repository.OrderRepository;
+import Team2.com.order.service.OrderService;
 import Team2.com.security.exception.CustomException;
 import Team2.com.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ public class MemberServiceImpl implements MemberService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    private final OrderService orderService;
 
     @Override
     @Transactional
@@ -58,12 +61,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void checkByMemberDuplicated(String email) {
-        if(memberRepository.existsByEmail(email))
-            throw new CustomException(DUPLICATED_USERNAME);}
+        if (memberRepository.existsByEmail(email))
+            throw new CustomException(DUPLICATED_USERNAME);
+    }
 
     @Override
     public void checkByMemberPhoneNumber(String phoneNumber) {
-        if(memberRepository.existsByPhoneNumber(phoneNumber))
+        if (memberRepository.existsByPhoneNumber(phoneNumber))
             throw new CustomException(DUPLICATED_PHONENUMBER);
     }
 
@@ -123,4 +127,31 @@ public class MemberServiceImpl implements MemberService {
         return info;
     }
 
+    // 챌린지 팀의 취지 -> 큰 차이 ? 강점? (깊은 고민과 열망이 있는 팀원분들 ), 고민에 관한 의사결정을 전달할 수 있어야 한다.
+    // 설득관련 포인트는 객관적 지표, fact, 기술적 의사결정
+
+    @Override // 어드민에 의한 주문 취소
+    public void cancelRequestFromAdmin(Long id) {
+        cancelRequest(id);
+    }
+
+    @Override // 사용자에 의한 주문 취소
+    public void cancelRequest(Long id) {
+        if (requestRepository.existsByUser(id)) {
+            requestRepository.deleteByUserId(id); // query에 트랜잭션 걸려있음
+        } else {
+            throw new CustomException(REQUEST_NOT_EXIST);
+        }
+    }
+
+    @Override  // 주문 취소
+    public void cancelOrders(Long id) {
+
+    }
+
+    @Override // 관리자에 의한 주문 취소
+    public void cancelOrdersFromAdmin(Long id) {
+
+    }
 }
+

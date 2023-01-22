@@ -40,4 +40,13 @@ public interface MemberService {
     void checkByMemberPhoneNumber(String phoneNumber); // 사용자 휴대폰 중복 확인
 
 
+
+    void cancelRequest(Long id); // 사용자 등업 및 강등 요청 신청 취소 // 여기서 들어오는 id 는 사용자 pk값 ( 사용자가 직접 )
+
+    void cancelRequestFromAdmin(Long id); // cancelRequest 동일한 기능 -> ( 어드민이 직접 )
+
+    void cancelOrders(Long id); // 사용자 주문 취소  ( 사용자가 직접)
+
+    void cancelOrdersFromAdmin(Long id); // cancelOrders 동일한 기능 -> ( 어드민이 직접 )
+
 }

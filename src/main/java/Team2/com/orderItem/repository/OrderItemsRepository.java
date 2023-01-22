@@ -16,5 +16,7 @@ public interface OrderItemsRepository extends JpaRepository<OrderItems, Long> {
 
     @Query("select o from OrderItems o, Item i where o.item.id = i.id and i.member.name = :sellerName")
     Page<OrderItems> checkItemSeller(Pageable pageRequest, @Param("sellerName") String sellerName);
+
+
 }
 

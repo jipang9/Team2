@@ -13,6 +13,7 @@ import Team2.com.orderItem.entity.OrderItems;
 import Team2.com.orderItem.repository.OrderItemsRepository;
 import Team2.com.security.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,6 +29,7 @@ import static Team2.com.security.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemsRepository orderItemsRepository;
@@ -148,5 +150,26 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.deleteById(orderId);
         }
     }
+
+
+
+    @Override // 주문 취소
+    public void cancelOrder(Long id, Member member) { // 여기서 넘어온 id는 memberId
+        if(orderRepository.existsByMemberId(id)){ // 사용자의 주문이 있는지 없는지부터 확인한다.
+            Order order = orderRepository.findById(id).get(); // 해당 주문을 찾아온다.
+            order.checkByCustomer(member);
+            orderRepository.deleteById(order.getId());
+        }else{
+            throw new CustomException(NOT_FOUND_ORDERNUMBER);
+        }
+    }
+
+    @Override // 주문상태 확인 (만약 이미 주문이 처리된 상품이면 -> 이미 처리된 주문(예외),, 이미 처리 x -> 그대로 return)
+    public void checkByOrderState(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(()-> new CustomException(NOT_FOUND_ORDERNUMBER));
+        order.checkByOrderStatus();
+    } // 주문 완료 처리가 되면 해당 데이터는 지워져버리네???? ( 필요없는 기능 같은데 )
+
+
 }
 

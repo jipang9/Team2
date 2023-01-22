@@ -16,6 +16,11 @@ public interface OrderService {
 
     OrderResponseDto getCustomerBuyItem(Long orderId, String sellerName); //(판매자)주문 내역 조회
 
-    void orderCompleteProceeding(Long orderId, String sellerName); //(판매자)주문완료처리
+    void orderCompleteProceeding(Long orderId, String sellerName); //(판매자)주문완료처리.
+
+
+    void cancelOrder(Long id, Member member); // 주문 취소
+
+    void checkByOrderState(Long id); // 주문 상태 확인 (이미 처리 혹은 아직 처리 x)
 }
 

@@ -7,6 +7,7 @@ import Team2.com.member.dto.member.LoginRequestDto;
 import Team2.com.member.dto.member.MsgResponseDto;
 import Team2.com.member.dto.member.SignupRequestDto;
 import Team2.com.member.service.member.MemberService;
+import Team2.com.order.service.OrderService;
 import Team2.com.security.details.UserDetailsImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +29,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final OrderService orderService;
 
     @GetMapping("/info")
     @ApiOperation(value = "내 프로필 조회")
@@ -68,6 +70,29 @@ public class MemberController {
         }
         return new ResponseEntity(sellerLists, HttpStatus.OK);
     }
+
+
+
+    @DeleteMapping("/apply-cancel")
+    @ApiOperation(value = " 권한 취소 ")
+    public HttpStatus cancelApply(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        memberService.cancelRequest(userDetails.getMember().getId());
+        return HttpStatus.OK;
+    }
+
+
+    @DeleteMapping("order/{id}")
+    @ApiOperation(value = " 주문 취소 ")
+    public HttpStatus cancelOrder(@PathVariable("id")Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        orderService.cancelOrder(id,userDetails.getMember());
+        return HttpStatus.OK;
+    }
+
+//    @DeleteMapping("/")
+//    public HttpStatus withdrawal(@AuthenticationPrincipal UserDetailsImpl userDetails){
+//        memberService.
+//
+//    }
 
 
 }

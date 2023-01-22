@@ -10,8 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
-@Secured({"ROLE_ADMIN"})
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @Api(tags = "관리자")
 public class AdminController {
 
@@ -61,6 +62,17 @@ public class AdminController {
         return ResponseEntity.status(200).build();
     }
 
+    @DeleteMapping("/delete/{id}")
+    public HttpStatus deleteMember(@PathVariable Long id){
+        adminService.deleteMember(id);
+        return HttpStatus.OK;
+    }
+
+    @DeleteMapping("/delete-force/{id}")
+    public HttpStatus deleteForceMember(@PathVariable Long id){
+        adminService.deleteMemberForce(id);
+        return HttpStatus.OK;
+    }
 
 }
 
