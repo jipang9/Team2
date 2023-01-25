@@ -9,6 +9,7 @@ import Team2.com.member.repository.MemberRepository;
 import Team2.com.member.repository.RequestRepository;
 import Team2.com.order.entity.Order;
 import Team2.com.order.repository.OrderRepository;
+import Team2.com.orderItem.entity.OrderItems;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -151,6 +152,7 @@ public class init implements ApplicationRunner {
         itemRepository.save(item12);
         Item item13 = new Item("포카칩 파란색", "취향존중", member25, 2500, 30);
         itemRepository.save(item13);
+
     }
 }
 
