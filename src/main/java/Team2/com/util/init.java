@@ -152,7 +152,6 @@ public class init implements ApplicationRunner {
         itemRepository.save(item12);
         Item item13 = new Item("포카칩 파란색", "취향존중", member25, 2500, 30);
         itemRepository.save(item13);
-
     }
 }
 
