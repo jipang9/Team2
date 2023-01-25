@@ -7,6 +7,9 @@ import Team2.com.member.entity.MemberRoleEnum;
 import Team2.com.member.entity.Request;
 import Team2.com.member.repository.MemberRepository;
 import Team2.com.member.repository.RequestRepository;
+import Team2.com.order.entity.Order;
+import Team2.com.order.repository.OrderRepository;
+import Team2.com.orderItem.entity.OrderItems;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -21,6 +24,7 @@ public class init implements ApplicationRunner {
     private final MemberRepository memberRepository;
     private final RequestRepository requestRepository;
     private final ItemRepository itemRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

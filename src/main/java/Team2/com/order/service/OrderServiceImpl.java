@@ -8,11 +8,13 @@ import Team2.com.order.dto.OrderRequestItemDto;
 import Team2.com.order.dto.OrderResponseDto;
 import Team2.com.order.dto.OrderResultDto;
 import Team2.com.order.entity.Order;
+
 import Team2.com.order.repository.OrderRepository;
 import Team2.com.orderItem.entity.OrderItems;
 import Team2.com.orderItem.repository.OrderItemsRepository;
 import Team2.com.security.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,6 +30,7 @@ import static Team2.com.security.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemsRepository orderItemsRepository;
@@ -126,14 +129,14 @@ public class OrderServiceImpl implements OrderService {
         return new OrderResponseDto(order.getId(), order.getOrderItems());
     }
 
+
+
     //(판매자)주문완료처리
     @Transactional
     @Override
     public void orderCompleteProceeding(Long orderId, String sellerName) {
-
         //주문조회
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new CustomException(NOT_FOUND_ORDERNUMBER));
-
         //판매자 상품이 맞는지 확인
         for (int i = 0; i < order.getOrderItems().size(); i++) {
             if (!order.getOrderItems().get(0).getItem().getMember().getName().equals(sellerName)) {
@@ -142,11 +145,31 @@ public class OrderServiceImpl implements OrderService {
         }
         //주문상태 변경 : N->Y
         order.updateOrderStatus();
+    }
 
-        //주문처리 완료 시 -> 해당 주문 내역 삭제
-        if (order.getOrderStatus().equals("Y")) {
-            orderRepository.deleteById(orderId);
-        }
+
+
+    @Override // 주문 취소
+    public void cancelOrder(Long id, Member member) {
+        Order order = orderRepository.findById(id).orElseThrow(()-> new CustomException(NOT_FOUND_ORDERNUMBER));
+        checkByOrderState(id);
+        order.checkByCustomer(member);
+        orderRepository.deleteById(order.getId());
+    }
+
+
+    @Override // 주문 상태 확인 -> 내가 만약에 주문을 취소하려고 하는데, 주문이 이미 진행되었으면 취소 불가
+    public void checkByOrderState(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new CustomException(NOT_FOUND_ORDERNUMBER));
+        order.checkByOrderStatus();
+    }
+
+    @Override
+    public void checkOrder(Long id) {
+        if(orderRepository.existsByMemberId(id)){
+            log.info(" 존재 ");
+        }else
+            return ;
     }
 }
 

@@ -36,7 +36,6 @@ public class ItemController {
 
     @GetMapping("/products")
     @ApiOperation(value = "모든 제품 조회")
-    @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
     public ResponseEntity getItemAllList(@RequestParam int offset, @RequestParam int limit){
         ResultResponseDto itemAllList = itemService.getItemAllList(offset, limit);
         return new ResponseEntity(itemAllList, HttpStatus.OK);

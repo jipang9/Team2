@@ -40,9 +40,7 @@ public class OrderItems {
         OrderItems orderItems = new OrderItems();
         orderItems.update(item, count);
         Item getItem = orderItems.getItem();
-
         getItem.removeCount(count); // Item 수량 감소
-
         return orderItems;
     }
 }

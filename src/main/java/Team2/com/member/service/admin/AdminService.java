@@ -22,4 +22,12 @@ public interface AdminService {
 
     List<MembersResponseDto> MemberListPaging(Pageable pageable, int page); // 페이징 - 사용자 조회
     List<SellersResponseDto> SellerListPaging(Pageable pageable, int page);  // 페이징 - 판매자 조회
+
+    Request checkByRoleApplies(Long id);
+
+    void deleteMemberForce(Long id); // 회원 강제 탈퇴
+
+    void deleteMember(Long id); // 회원탈퇴
+
+    void cancelRequestFromAdmin(Long id);
 }

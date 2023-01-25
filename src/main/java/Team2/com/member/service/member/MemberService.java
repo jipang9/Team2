@@ -22,7 +22,6 @@ public interface MemberService {
 
     InfoResponseDto getMyInfo(Member member); // 내 정보 가지고 오기
 
-    void checkByRequest(Long id); // 사용자 요청이 있는지 확인
 
 
     // 관리부
@@ -38,6 +37,19 @@ public interface MemberService {
     void checkByMemberDuplicated(String username); // 사용자 중복 확인
 
     void checkByMemberPhoneNumber(String phoneNumber); // 사용자 휴대폰 중복 확인
+
+
+
+    void cancelRequestFromMember(Long id); // 요청 취소 ( 완료 )
+
+
+
+    void withdrawal(Long id); // 회원탈퇴 ( 진행 중 )
+
+
+    void checkMembersRequestNotExistException(Long id); // 요청이 존재하지 않으면 예외 ( 완료 )
+
+    void checkMembersRequestExistException(Long id); // 요청이 존재하면 예외 ( 완료 )
 
 
 }
