@@ -72,27 +72,38 @@ public class MemberController {
     }
 
 
-
+    // 요청 취소 ( 완료 )
     @DeleteMapping("/apply-cancel")
-    @ApiOperation(value = " 권한 취소 ")
+    @ApiOperation(value = " 권한 관련 요청 취소 ")
     public HttpStatus cancelApply(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        memberService.cancelRequest(userDetails.getMember().getId());
+        memberService.cancelRequestFromMember(userDetails.getMember().getId());
         return HttpStatus.OK;
     }
 
 
+    // 주문 취소 ( 완료 )
     @DeleteMapping("order/{id}")
     @ApiOperation(value = " 주문 취소 ")
     public HttpStatus cancelOrder(@PathVariable("id")Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        orderService.cancelOrder(id,userDetails.getMember());
+        orderService.cancelOrder(id,userDetails.getMember()); // 취소하고자 하는 주문 번호와, 사용자 정보를 넘긴다다
+       return HttpStatus.OK;
+    }
+
+
+    // 회원 탈퇴 ( 미완성 )
+    @DeleteMapping("/")
+    public HttpStatus withdrawal(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        memberService.withdrawal(userDetails.getMember().getId());
         return HttpStatus.OK;
     }
 
-//    @DeleteMapping("/")
-//    public HttpStatus withdrawal(@AuthenticationPrincipal UserDetailsImpl userDetails){
-//        memberService.
-//
-//    }
 
 
+    /**필요한 기능
+     * 1. 사용자에 의한 주문 취소 -> ( 만약에 주문 상태가 Y이면, 주문취소는 불가능하다. )
+     * 2. 사용자에 의한 회원 탈퇴 -> 만약 나의 주문이 대기중이거나, 권한을 요청한 상태면 -> 이 두개를 먼저 취소한 뒤 탈퇴할 수 있도록
+     * 메시지를 뱉어줘야 한다. * -> 만약 위의 상태가 아니라면 -> 바로 삭제 (내가 만약에 판매자라면 -> 판매 아이템을 우선 삭제해야한다.)
+     * 3. 판매자에 의한 주문 취소 -> 강제로 취소할 수 있다. 사용자의 요청을*
+     * 4. 어드민에 의한 회원 탈퇴 *
+     * * * * **/
 }

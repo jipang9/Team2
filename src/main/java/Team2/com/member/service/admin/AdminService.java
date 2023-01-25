@@ -29,4 +29,5 @@ public interface AdminService {
 
     void deleteMember(Long id); // 회원탈퇴
 
+    void cancelRequestFromAdmin(Long id);
 }

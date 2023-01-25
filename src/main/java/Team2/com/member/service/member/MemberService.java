@@ -22,7 +22,6 @@ public interface MemberService {
 
     InfoResponseDto getMyInfo(Member member); // 내 정보 가지고 오기
 
-    void checkByRequest(Long id); // 사용자 요청이 있는지 확인
 
 
     // 관리부
@@ -41,12 +40,16 @@ public interface MemberService {
 
 
 
-    void cancelRequest(Long id); // 사용자 등업 및 강등 요청 신청 취소 // 여기서 들어오는 id 는 사용자 pk값 ( 사용자가 직접 )
+    void cancelRequestFromMember(Long id); // 요청 취소 ( 완료 )
 
-    void cancelRequestFromAdmin(Long id); // cancelRequest 동일한 기능 -> ( 어드민이 직접 )
 
-    void cancelOrders(Long id); // 사용자 주문 취소  ( 사용자가 직접)
 
-    void cancelOrdersFromAdmin(Long id); // cancelOrders 동일한 기능 -> ( 어드민이 직접 )
+    void withdrawal(Long id); // 회원탈퇴 ( 진행 중 )
+
+
+    void checkMembersRequestNotExistException(Long id); // 요청이 존재하지 않으면 예외 ( 완료 )
+
+    void checkMembersRequestExistException(Long id); // 요청이 존재하면 예외 ( 완료 )
+
 
 }

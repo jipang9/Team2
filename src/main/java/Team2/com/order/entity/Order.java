@@ -33,6 +33,8 @@ public class Order {
     @Column(nullable = false)
     private String orderStatus = "N";
 
+
+
     public void setMember(Member member){
         this.member=member;
     }
@@ -67,7 +69,7 @@ public class Order {
 
     public void checkByOrderStatus(){ // 주문 상태 확인
         if(this.getOrderStatus().equals("Y"))
-            throw new CustomException(ErrorCode.ALREADY_ORDER); // 해당 주문이
+            throw new CustomException(ErrorCode.ALREADY_ORDER);
     }
 
     public void checkByCustomer(Member member){ // 해당 주문이 해당 유저의 주문인지 아닌지 확인

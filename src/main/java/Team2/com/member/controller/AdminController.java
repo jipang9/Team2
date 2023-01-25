@@ -50,29 +50,34 @@ public class AdminController {
 
     @PatchMapping("/promoted/{id}")
     @ApiOperation(value = "등업")
-    public ResponseEntity<Void> addRoles(@PathVariable Long id) {
+    public ResponseEntity<Void> addRoles(@PathVariable("id") Long id) {
         adminService.addRoles(id);
         return ResponseEntity.status(201).build();
     }
 
     @PatchMapping("/demotion/{id}")
     @ApiOperation(value = "강등")
-    public ResponseEntity<Void> deleteRoles(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRoles(@PathVariable("id") Long id) {
         adminService.deleteRoles(id);
         return ResponseEntity.status(200).build();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public HttpStatus deleteMember(@PathVariable Long id){
+    @DeleteMapping("/delete/{id}") // 고민 필요함
+    public HttpStatus deleteMember(@PathVariable("id") Long id){
         adminService.deleteMember(id);
         return HttpStatus.OK;
     }
 
-    @DeleteMapping("/delete-force/{id}")
-    public HttpStatus deleteForceMember(@PathVariable Long id){
+    @DeleteMapping("/delete-force/{id}") // 고민 필요함
+    public HttpStatus deleteForceMember(@PathVariable("id") Long id){
         adminService.deleteMemberForce(id);
         return HttpStatus.OK;
     }
 
+    @DeleteMapping("/member-request/{id}") // 사용자 요청 취소
+    public HttpStatus cancelMemberRequest(@PathVariable("id")Long id){
+        adminService.cancelRequestFromAdmin(id);
+        return HttpStatus.OK;
+    }
 }
 

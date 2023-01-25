@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Team2.com.security.exception.ErrorCode.NOT_FOUND_USER;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -126,7 +128,7 @@ public class AdminServiceImpl implements AdminService {
         // 회원탈퇴 로직 순서 ->
         // 1. 해당 유저의 요청이 있는지 없는지 판단하고, 만약에 요청이 있으면 요청이 있음을 알려준다.  -> 회원탈퇴 실패 ( 요청 철회 기능 만들어야함.)
         // 1-1. 요청이 없으면 다음 로직으로 이동  ->
-        memberService.cancelRequestFromAdmin(id);// 요청 있다 vs 없다. -> 있으면 삭제, 없으면 pass
+//        memberService.cancelRequestFromAdmin(id);// 요청 있다 vs 없다. -> 있으면 삭제, 없으면 pass
         log.info("다음 로직으로 GOGO");
 
         // 2. 해당 유저의 상품 주문이 있는지 없는지 확인한다, -> 만약 유저 상품 주문이 있으면 -> 회원탈퇴 실패  ( 주문 철회 기능 필요함)
@@ -143,7 +145,16 @@ public class AdminServiceImpl implements AdminService {
         // 회원탈퇴 관련한 고찰
         // 어드민이 강제로?  회원이 자발적으로?  혹은 둘 다 ?
 
-
     }
+
+
+    // 해당 유저의 정보를 찾아온다 -> 해당 유저가 요청이 있는지 없는지 확인한다.
+    @Override // 판매자에 의한 요청 취소
+    public void cancelRequestFromAdmin(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(()-> new CustomException(NOT_FOUND_USER));
+        memberService.checkMembersRequestExistException(member.getId());
+        requestRepository.deleteByUserId(member.getId());
+    }
+
 }
 

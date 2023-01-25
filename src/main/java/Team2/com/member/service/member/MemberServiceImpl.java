@@ -12,7 +12,6 @@ import Team2.com.member.entity.Request;
 import Team2.com.member.entity.Status;
 import Team2.com.member.repository.MemberRepository;
 import Team2.com.member.repository.RequestRepository;
-import Team2.com.order.repository.OrderRepository;
 import Team2.com.order.service.OrderService;
 import Team2.com.security.exception.CustomException;
 import Team2.com.security.jwt.JwtUtil;
@@ -25,7 +24,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 
 import static Team2.com.security.exception.ErrorCode.*;
 
@@ -92,9 +90,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-    @Override
+    @Override // 권한 등록
     public void apply(ApplyRequestDto applyRequestDto, Member member) {
-        checkByRequest(member.getId());
+        checkMembersRequestExistException(member.getId());
         member.checkByMemberRole(applyRequestDto.getStatus(), member);
         if (member.getRole().equals(MemberRoleEnum.CUSTOMER)) {
             Request request = new Request(member.getId(), member.getRole().toString(), Status.UP.toString());
@@ -110,15 +108,6 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findBySellerId(Long.valueOf(sellerId));
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public void checkByRequest(Long id) {
-        Optional<Request> check = requestRepository.findByMember(id);
-        if (check.isEmpty() == true) {
-            return;
-        } else
-            throw new CustomException(MEMBER_Already_REQUEST);
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -127,31 +116,38 @@ public class MemberServiceImpl implements MemberService {
         return info;
     }
 
-    // 챌린지 팀의 취지 -> 큰 차이 ? 강점? (깊은 고민과 열망이 있는 팀원분들 ), 고민에 관한 의사결정을 전달할 수 있어야 한다.
-    // 설득관련 포인트는 객관적 지표, fact, 기술적 의사결정
 
-    @Override // 어드민에 의한 주문 취소
-    public void cancelRequestFromAdmin(Long id) {
-        cancelRequest(id);
+    @Override // 요청 취소 ( 완료 )
+    public void cancelRequestFromMember(Long id) {
+        checkMembersRequestNotExistException(id);
+        requestRepository.deleteByUserId(id); // query에 트랜잭션 걸려있음
     }
 
-    @Override // 사용자에 의한 주문 취소
-    public void cancelRequest(Long id) {
-        if (requestRepository.existsByUser(id)) {
-            requestRepository.deleteByUserId(id); // query에 트랜잭션 걸려있음
-        } else {
-            throw new CustomException(REQUEST_NOT_EXIST);
-        }
+
+    @Override // 회원탈퇴
+    public void withdrawal(Long id) { // 넘어온 값 -> 사용자 pk
+        checkMembersRequestExistException(id); // 요청이 있는지 없는지 확인
+        orderService.checkOrder(id);
+        // 아직 상품처리가 됐는지 안됐는지 -> 안됐으면 취소 예외 -> 됐으면 ㄱㅊ
     }
 
-    @Override  // 주문 취소
-    public void cancelOrders(Long id) {
-
+    @Override // 요청이 존재하지 않으면 예외 ( 완료 )
+    public void checkMembersRequestNotExistException(Long id) {
+        if (requestRepository.existsByUser(id)) { //  true & false
+            return;
+        } else
+            throw new CustomException(THIS_REQUEST_IS_ALREADY);
     }
 
-    @Override // 관리자에 의한 주문 취소
-    public void cancelOrdersFromAdmin(Long id) {
-
+    @Override // 요청이 존재하면 예외 ( 완료 )
+    public void checkMembersRequestExistException(Long id) {
+        if (requestRepository.existsByUser(id)) { //  true & false
+            throw new CustomException(REQUEST_IS_EXIST);
+        } else
+            return;
     }
+
+
+
 }
 
