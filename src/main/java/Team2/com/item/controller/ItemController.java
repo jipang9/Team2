@@ -21,12 +21,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "상점")
-@RequestMapping("/api/seller")
+@RequestMapping("/api")
 public class ItemController {
 
     private final ItemService itemService;
 
-    @PostMapping("/product")
+    @PostMapping("/seller/product")
     @ApiOperation(value = "상품 등록")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public HttpStatus addItem(@Valid @RequestBody ItemRequestDto requestItemDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -41,6 +41,15 @@ public class ItemController {
         return new ResponseEntity(itemAllList, HttpStatus.OK);
     }
 
+
+    @GetMapping("/seller/products")
+    @ApiOperation(value = "판매자 제품 조회")
+    @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
+    public ResponseEntity getSellerItemAllList(@RequestParam int offset, @RequestParam int limit, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        ResultResponseDto selleritemAllList = itemService.getSellerItemAllList(offset, limit, userDetails.getUsername());
+        return new ResponseEntity(selleritemAllList, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "단일 제품 조회")
     @GetMapping("/product/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER", "ROLE_CUSTOMER"})
@@ -51,7 +60,7 @@ public class ItemController {
 
 
     @ApiOperation(value = "상품 정보 수정")
-    @PutMapping("/product/{id}")
+    @PutMapping("/seller/product/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public HttpStatus modifyItem(@PathVariable("id") Long itemId, @RequestBody ItemRequestDto requestItemDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         itemService.modifyItem(itemId, requestItemDto, userDetails.getUsername());
@@ -59,7 +68,7 @@ public class ItemController {
     }
 
     @ApiOperation(value = "상품 삭제")
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/seller/product/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_SELLER"})
     public HttpStatus deleteItem(@PathVariable("id") Long itemId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         itemService.deleteItem(itemId, userDetails.getUsername());
